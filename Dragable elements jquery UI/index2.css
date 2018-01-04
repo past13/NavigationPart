@@ -1,0 +1,31 @@
+.wrap {
+    width: 1200px;
+    border: 1px brown solid;
+    font-size: 0;
+}
+.resizable {
+    /* width: 100%; */
+    height: 900px;
+    padding: 0.5em;
+    background-color: coral;
+    display: inline-block;   
+ 
+}
+.resizable2 {
+    height: 900px;
+    /* padding: 0.5em; */
+    background-color: lightblue;
+}
+.resizable3 {
+    height: 900px;
+    /* padding: 0.5em; */
+    background-color: green;
+}
+.ui-resizable-e { 
+    cursor: e-resize; 
+    width: 16px; 
+    right: -5px; 
+    top: 0; 
+    bottom: 0; 
+    background-color: gray;
+}

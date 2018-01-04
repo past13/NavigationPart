@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Resizable - Default functionality</title>
+  <link rel="stylesheet" type="text/css" href="jquery-ui-1.12.1/jquery-ui.css" />
+  <link rel="stylesheet" href="index4.css">
+  <script src="jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+  <script src="jquery-ui-1.12.1/jquery-ui.js"></script>
+</head>
+
+<body>
+        <div id="body">
+                <div class="block">test1</div>
+                <div class="block">test2</div>
+                <!-- <div class="block">test3</div>
+                <div class="block">test4</div> -->
+            </div>
+</body>
+
+<script>
+$(function () {
+
+    var containerWidth = $("#body").width();
+        // console.log(containerWidth)
+
+    var getCurrentBlockRight = function ($currentBlock) {       
+        var $parent = $currentBlock.parent();
+        console.log($parent.children())
+        console.log($currentBlock)
+        
+        
+        return $currentBlock.offset().left + $currentBlock.outerWidth() - $parent.offset().left - parseInt($parent.css("padding-left"), 10);
+    };
+    $('.block').resizable({
+        maxWidth: containerWidth, 
+        minHeight: 800,
+        maxHeight: 800,
+        minWidth: 10,
+        start: function (event, ui) {
+            var $currentBlock = $(this);
+            var width = $(this).width();
+
+            // console.log(containerWidth - getCurrentBlockRight($currentBlock) - width)
+            console.log(width)
+           
+            $currentBlock.resizable("option", "maxWidth", containerWidth - width - getCurrentBlockRight($currentBlock));
+            
+            // $currentBlock.resizable("option", "maxWidth", width + containerWidth - getCurrentBlockRight($currentBlock));
+        }
+    });
+});
+
+
+</script>
+</html>
