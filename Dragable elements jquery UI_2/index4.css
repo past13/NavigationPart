@@ -1,0 +1,19 @@
+.block
+{
+    border: 1px dashed gray;
+    display: inline-block;
+    height: 800px;
+    
+    /* height: 132px; */
+    width: 130px;
+}
+
+#body
+{
+    width: 1000px;
+    height: 800px;
+    border: 1px solid red;
+    min-height: 50px;
+    /* padding: 10px; */
+    /* height: auto; */
+}

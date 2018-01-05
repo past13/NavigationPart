@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Resizable - Default functionality</title>
+  <link rel="stylesheet" type="text/css" href="jquery-ui-1.12.1/jquery-ui.css" />
+  <link rel="stylesheet" href="styles.css">
+  <script src="jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+  <script src="jquery-ui-1.12.1/jquery-ui.js"></script>
+  <style>
+html, body {
+  height: 100%
+
+}
+
+.container {
+  display: flex;
+  flex-flow: row wrap;
+  height: 100%;
+}
+
+.flexer, .not-flexer {
+  flex: 1 0;
+  min-width: 50%;
+  position: relative;
+  top: 0!important;
+  bottom: 0!important;
+  height: 100%!important;
+}
+
+.flexer {
+  background-color: red
+}
+
+.ui-resizable-handle {
+  height: 100%;
+  width: 15px;
+  background-color: pink;
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: col-resize;
+}
+
+  </style> 
+  <script>
+         (function() {
+  $(function() {
+    return $('.flexer').resizable({
+      handles: 'ne'
+    }).resize(function() {
+      var width;
+      width = this.style.width;
+      return this.style['-webkit-flex-basis'] = width;
+    });
+  });
+
+}).call(this);
+  </script> 
+</head>
+<body>
+    <div class="container">
+        <div class="flexer">Sup</div>
+        <div class="not-flexer">No flex</div>
+      </div>
+</body>
+</html>
