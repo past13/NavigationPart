@@ -58,6 +58,7 @@
       
   </style> 
   <script>
+
          $(document).ready(function() {
 
             // init
@@ -75,37 +76,80 @@
             // var $currentBlock = $(this);
             // console.log($currentBlock)
 
+            var $this = $(this);
+            
+
             $(resize).resizable({
-                
+                  axis: 'x', 
+                  refreshPositions: true,
+                  
                   handles: 'e',                  
-                  maxWidth: 400,
+                  maxWidth: 900,
                   minWidth: 20,
 
                   handleSelector: ".splitter",
                 //   containment: ".panel-container",
                 //   alsoResize: "#content1",
-                  resize: function(event, ui){
+
+
+                start: function(event, ui) {
+                
+                var element = ui.element;
                     
-                    var element = ui.element;
+                    elWidth = element.width();
+                    nextWidth = element.next().next().width();
 
-                    var currentWidth = ui.size.width;
+                    element.width( elWidth + (ui.position.left-ui.originalPosition.left) );
+                    element.next().next().width( nextWidth - (ui.position.left-ui.originalPosition.left) );
+                    console.log(elWidth + " " + nextWidth)
+                  },
 
-                    var nextcontainer = $(element).next().next().css({"color": "red", "border": "1px solid red"}); //next container 
-
+                //   resize: function(event, ui){
+                //     var element = ui.element;
                     
-                    // console.log(currentWidth)
+
+                //   }
+            });
+                    
+                //   stop: function(event, ui) {
+                //     $(".ui-draggable").each(function(){
+                //         $(this).css({"left":'auto','right':'0'});
+                //     });
+                    
+                  
+                    
+                    
+
+                    // var currentWidth = ui.size.width;
+
+                    // $(element).next().next().css({"color": "red", "border": "1px solid red"}); //next container 
+                    
+                    // var aaa = $(this).width(currentWidth);     
+
+                    // console.log(aaa);
 
 
-                    var nextcontainerwidth = $(element).next().next().width(); 
-                    var previouscontainer = $(element).prev().prev().width();
+                    // var nextcontainer = $(element).next().next();
 
-                    if (currentWidth >= 200){
-                        var remainingwidth = containerWidth - size3 - size4 - currentWidth;
-                        var result = size2 - remainingwidth;
+                    // var outerelement = ui.element.outerWidth()
 
-                        console.log(remainingwidth)
+                    // var remainingSpace = parent.width() - ui.element.outerWidth();
+
+                    // var divTwoWidth = (remainingSpace - (nextcontainer.outerWidth() - nextcontainer.width()))/parent.width()*100+"%";
+
+
+                    // var nextcontainerwidth = $(element).next().next().width(); 
+                    // var previouscontainer = $(element).prev().prev().width();
+
+                    // var remainingwidth = containerWidth - size3 - size4 - 16;
                         
-                    }
+
+
+
+
+                    // console.log(remainingwidth)
+                        
+                 
 
 
                     
@@ -124,8 +168,8 @@
                       
                     //   // set the content panel width
                     //   $("#content").width(containerWidth - currentWidth - padding);            
-                  }
-            });
+                  
+        
 
             $(resize0).resizable({
                 
@@ -134,21 +178,8 @@
                 minWidth: 20,
 
                 handleSelector: ".splitter",
-              //   containment: ".panel-container",
-              //   alsoResize: "#content1",
                 resize: function(event, ui){
-                  //   var currentWidth = ui.size.width;
-                    
-                  //   // this accounts for padding in the panels + 
-                  //   // borders, you could calculate this using jQuery
-                  //   var padding = 12; 
-                    
-                  //   // this accounts for some lag in the ui.size value, if you take this away 
-                  //   // you'll get some instable behaviour
-                  //   $(this).width(currentWidth);
-                    
-                  //   // set the content panel width
-                  //   $("#content").width(containerWidth - currentWidth - padding);            
+             
                 }
           });
 
