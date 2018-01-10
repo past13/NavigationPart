@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Resizable - Default functionality</title>
+  <link rel="stylesheet" type="text/css" href="jquery-ui-1.12.1/jquery-ui.css" />
+  <link rel="stylesheet" href="index6.css">
+  <script src="jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+  <script src="jquery-ui-1.12.1/jquery-ui.js"></script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="left_panel">
+            some text, lorem ipsum. some text, lorem ipsum. some text, lorem ipsum.
+        </div>
+        <div id="content" >
+            some text, lorem ipsum. some text, lorem ipsum. some text, lorem ipsum.
+        </div>
+        <div id="content1" >
+                some text, lorem ipsum. some text, lorem ipsum. some text, lorem ipsum.
+        </div>
+        <div class="clear"></div>
+    </div>
+</body>
+
+<script>
+$(document).ready(function() {
+
+// init
+// var leftPanel = $("#left_slide_panel");
+var resize= $("#left_panel");
+var containerWidth = $("#container").width();
+    
+var alsoResize = $( "#container" ).resizable( "option", "alsoResize" );
+ 
+// Setter
+$( "#container" ).resizable( "option", "alsoResize", "#mirror" );
+
+$(resize).resizable({
+    
+
+
+    //   handles: 'e',
+    //   alsoResize: '#content, #content1',
+    //   maxWidth: 450,
+    //   minWidth: 192,
+    //   resize: function(event, ui){
+    //       var currentWidth = ui.size.width;
+    //       console.log( ui)
+    //       // this accounts for padding in the panels + 
+    //       // borders, you could calculate this using jQuery
+    //       var padding = 12; 
+          
+    //       // this accounts for some lag in the ui.size value, if you take this away 
+    //       // you'll get some instable behaviour
+    //       $(this).width(currentWidth);
+          
+    //       // set the content panel width
+    //       $("#content").width(containerWidth - currentWidth - padding);            
+    //   }
+});
+
+
+});
+</script>
+
+</html>

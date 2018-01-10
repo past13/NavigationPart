@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Resizable - Default functionality</title>
+  <link rel="stylesheet" type="text/css" href="jquery-ui-1.12.1/jquery-ui.css" />
+  <link rel="stylesheet" href="styles.css">
+  <script src="jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+  <script src="jquery-ui-1.12.1/jquery-ui.js"></script>
+  <style>
+          .ui-widget-header {
+            background:#b9cd6d;
+            border: 1px solid #b9cd6d;
+            color: #FFFFFF;
+            font-weight: bold;
+          }
+          .ui-widget-content {
+            background: #cedc98;
+            
+            border: 1px solid #DDDDDD;
+            color: #333333;            
+          }
+          #resizable-14 { 
+            width: 200px; 
+            height: 700px; 
+            padding: 0.5em;
+            text-align: center; 
+            margin: 0; 
+            min-height: 700px;
+            max-height: 700px;
+
+            min-width: 200px;
+            max-width: 400px;
+            
+          }
+  </style> 
+  <script>
+          $(function() {
+            $( "#resizable-14" ).resizable({
+              
+                // create: function( event, ui ) {
+
+                //   console.log( event)
+                //   $("#resizable-15").text ("I'm Created!!");
+                // },
+                resize: function (event, ui) {
+                  // console.log( ui)
+                  $("#resizable-16").text ("top = " + ui.position.top +
+                      ", left = " + ui.position.left +
+                      ", width = " + ui.size.width +
+                      ", height = " + ui.size.height);
+                }
+            });
+          });
+  </script> 
+</head>
+<body>
+ <div id="maincontainer">
+  <div id = "resizable-14" class = "ui-widget-content"> 
+      <h3 class = "ui-widget-header">Resize !!</h3>
+   </div>
+   <div id = "resizable-17" class = "ui-widget-content"> 
+      <h3 class = "ui-widget-header">Resize1 !!</h3>
+   </div>
+   <div id = "resizable-18" class = "ui-widget-content"> 
+      <h3 class = "ui-widget-header">Resize2 !!</h3>
+   </div>
+ <div>
+   
+   <br>
+   <span id = "resizable-15"></span>
+   <br>
+   <span id = "resizable-16"></span>
+</body>
+</html>

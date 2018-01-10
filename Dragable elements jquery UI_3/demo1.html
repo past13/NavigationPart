@@ -1,0 +1,111 @@
+<html>
+<head>
+    <title>Simple Split Panels - jquery-resizable</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="demo1.css">
+    <link rel="stylesheet" type="text/css" href="jquery-ui-1.12.1/jquery-ui.css" />
+    <script src="jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+    <script src="jquery-ui-1.12.1/jquery-ui.js"></script>
+    
+    <style>
+        .column {
+            position: relative;
+        }
+    </style>
+
+</head>
+<body >
+    <div class="page-container">    
+
+        <div class="panel-container">
+            <div id="panel-left" class="column three">
+              <p>left panel</p>
+              <div id="splitter1" class="splitter"></div>
+            </div>
+            
+            <div id="panel-center" class="column three">second panel</div>
+            <div id="splitter2" class="splitter"></div>
+            <div id="panel-center1" class="column three">third panel</div>
+            <div id="splitter3" class="splitter"></div>
+            <div id="panel-right" class="column three">right panel</div>
+        </div>
+  
+  
+</div>
+<script> 
+function autocollapsepanels(event, ui) {
+  
+  // for each panel: if size < threshold, collapse it
+}
+function resizestarted(event, ui) {
+
+  // ui.element.width()  
+  //all widt
+  elWidth = ui.element.width();
+
+  nextWidth = ui.element.next().next().width();
+  prevWidth = ui.element.prev().prev().width();
+
+  prev = ui.element.prev().prev();
+  nextnext = ui.element.next().next().next().next();
+
+// $(nextnext).resizable('disable');
+console.log(ui.element)
+
+
+  
+  // attempt to disable resizing of nonjquery disable -adjacent panels
+}
+function resizestopped(event, ui) {
+  
+
+
+  autocollapsepanels(event, ui);
+  // reenable resizing of all non-collapsed panels
+}
+//  $("#panel-left").resizable({
+//    handleSelector: "#splitter1",
+//    containment: ".panel-container",
+//    handles: "e",
+   
+//  })
+//  .on("resizestart", function(event, ui) { resizestarted(event, ui); 
+//   })
+//  .on("resizestop", function(event, ui) { resizestopped(event, ui); } );
+ 
+//  $("#panel-center").resizable({
+//    handleSelector: "#splitter2",
+//    containment: ".panel-container",
+//    handles: "e"
+//  }) 
+//  .on("resizestart", function(event, ui) { resizestarted(event, ui); } )
+//  .on("resizestop", function(event, ui) { resizestopped(event, ui); } );
+ 
+//  $("#panel-center1").resizable({
+//    handleSelector: "#splitter3",
+//    containment: ".panel-container",
+//    handles: "e"
+//  })
+//  .on("resizestart", function(event, ui) { resizestarted(event, ui); } )
+//  .on("resizestop", function(event, ui) { resizestopped(event, ui); } );
+ 
+//  $("#panel-right").resizable({
+//    containment: ".panel-container",
+//    minWidth: 0,
+//    handles: "e"
+//  })
+//  .on("resizestart", function(event, ui) { resizestarted(event, ui); } )
+//  .on("resizestop", function(event, ui) { resizestopped(event, ui); } );
+
+</script>
+
+
+
+</body>
+</html>
+
+
+
+<!-- https://weblog.west-wind.com/posts/2015/Dec/21/A-small-jQuery-Resizable-Plugin -->
+
+ 

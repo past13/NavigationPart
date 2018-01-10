@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Resizable - Default functionality</title>
+  <link rel="stylesheet" type="text/css" href="jquery-ui-1.12.1/jquery-ui.css" />
+  <link rel="stylesheet" href="index3.css">
+  <script src="jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+  <script src="jquery-ui-1.12.1/jquery-ui.js"></script>
+</head>
+<body>
+    <div class="page-container">
+
+        <h1>jquery-resizable - Table Column Resizing</h1>
+        <hr />
+        <p>
+          This example makes the first two columns of the table resizable.
+        </p>
+      
+        <hr />
+      
+        <table>
+          <thead>
+            <th>
+              col 1
+            </th>
+            <th>
+              col 2
+            </th>
+            <th>
+              col 3
+            </th>
+            <th>
+              col 4
+            </th>
+          </thead>
+      
+          <tbody>
+            <tr>
+              <td>
+                Column 1
+              </td>
+              <td>
+      
+                Column 2
+              </td>
+              <td>
+      
+                Column 3
+              </td>
+              <td>
+                Column 4
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Column 1
+              </td>
+              <td>
+                Column 2
+              </td>
+              <td>
+                Column 3
+              </td>
+              <td>
+                Column 4
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <hr />
+        <p>
+          To create resizable columns requires a bit of extra effort as tables don't have an easy way to create a drag handle that can be moved around.
+        </p>
+        <p>
+          To make columns resizable, we can add an element to the right of the column to provide the handle so we have a visual indicator for dragging. The table cell to resize is made <code>position:relative</code> and the injected element is <code>position: absolute</code>    and pushed to the right of the cell to provide the drag handle. Dragging then simply resizes the cell.
+        </p>
+        <p>
+          In practice this means you need some CSS (or jquery styling) to force the injected styling and the logic to inject the element.
+        </p>
+      
+      </div>
+</body>
+<script>
+    //$("td,th")
+$("td:first-child,td:nth-child(2),td:nth-child(3)")
+  .css({
+    /* required to allow resizer embedding */
+    position: "relative"
+  })
+  /* check .resizer CSS */
+  .prepend("<div class='resizer'></div>")
+  .resizable({
+    resizeHeight: false,
+    // we use the column as handle and filter
+    // by the contained .resizer element
+    handleSelector: "",
+    onDragStart: function(e, $el, opt) {
+      // only drag resizer
+      if (!$(e.target).hasClass("resizer"))
+        return true;
+      return true;
+    }
+  });
+    </script>
+</html>
