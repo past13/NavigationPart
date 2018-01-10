@@ -45,7 +45,7 @@
           var $this = $(this);
           var $left = parseInt($(this).parent().offset().left) + 100,
           $right = parseInt($(this).parent().next().offset().left) +  50;
-          //  console.log($this);
+          // console.log($left);
           $(this).draggable({ 
             axis: 'x', 
             refreshPositions: true,
@@ -59,8 +59,7 @@
               var test1 = $(this).parent().width( elWidth + (ui.position.left-ui.originalPosition.left) );
               var test2 = $(this).parent().next().width( nextWidth - (ui.position.left-ui.originalPosition.left) );
             
-              console.log( test1.width());
-              console.log( test2.width());
+              console.log( elWidth);
            
            
             },
@@ -140,5 +139,3 @@
 
   </body>
 </html>
-
-

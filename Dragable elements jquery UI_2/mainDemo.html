@@ -33,44 +33,41 @@
     <!-- JS -->
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
+   
+    <script src="jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+    <script src="jquery-ui-1.12.1/jquery-ui.js"></script>
     <script>
-    jQuery(document).ready(function(){
+    
+    $(document).ready(function() {
 
-//        var stopTwoLeft = parseInt( $('.one').offset().left ) +150;
-  //      var stopTwoRight = parseInt( $('.three').offset().left ) + $('.three').width() - 150;
-    //    console.log(stopTwoLeft);
+    //  var stopTwoLeft = parseInt( $('.one').offset().left ) +150;
+    //  var stopTwoRight = parseInt( $('.three').offset().left ) + $('.three').width() - 150;
+    //  console.log(stopTwoLeft);
 
     function init_draggable(){
       $(".ui-draggable").each(function(){
-          var $this = $(this);
-          var $left = parseInt($(this).parent().offset().left) + 100,
-          $right = parseInt($(this).parent().next().offset().left) +  50;
-          //  console.log($this);
-          $(this).draggable({ 
-            axis: 'x', 
-            refreshPositions: true,
-            start: function(event, ui) {
-              elWidth = $(this).parent().width();
-              nextWidth = $(this).parent().next().width();
-          // console.log(nextWidth);
-              
-            },
-            drag: function(event, ui) {
-              var test1 = $(this).parent().width( elWidth + (ui.position.left-ui.originalPosition.left) );
-              var test2 = $(this).parent().next().width( nextWidth - (ui.position.left-ui.originalPosition.left) );
-            
-              console.log( test1.width());
-              console.log( test2.width());
-           
-           
-            },
-            stop: function(event, ui) {
-              $(".ui-draggable").each(function(){
-                  $(this).css({"left":'auto','right':'0'});
-              });
-              init_draggable();
-            },
-              containment: [parseInt($(this).parent().offset().left) + 40,0,parseInt($(this).parent().next().offset().left + $(this).parent().next().width() - 40),0]
+    
+          $(".ui-draggable").draggable({ 
+
+
+
+            // axis: 'x', 
+            // refreshPositions: true,
+            // start: function(event, ui) {
+            //   elWidth = $(this).parent().width();
+            //   nextWidth = $(this).parent().next().width();
+            // },
+            // drag: function(event, ui) {
+            //   $(this).parent().width( elWidth + (ui.position.left-ui.originalPosition.left) );
+            //   $(this).parent().next().width( nextWidth - (ui.position.left-ui.originalPosition.left) );
+            // },
+            // stop: function(event, ui) {
+            //   $(".ui-draggable").each(function(){
+            //       $(this).css({"left":'auto','right':'0'});
+            //   });
+            //   init_draggable();
+            // },
+            //   containment: [parseInt($(this).parent().offset().left) + 40,0,parseInt($(this).parent().next().offset().left + $(this).parent().next().width() - 40),0]
           });
       });
   }
@@ -140,5 +137,3 @@
 
   </body>
 </html>
-
-
