@@ -38,13 +38,19 @@
            {               
                var parent = ui.element.parent();
 
-               var remainingSpace = parent.width() - ui.element.outerWidth(), 
-               divTwo = ui.element.next(),
+               var remainingSpace = parent.width() - ui.element.outerWidth();
+
+                
+
+               divTwo = ui.element.next();
                
                divTwoWidth = (remainingSpace - (divTwo.outerWidth() - divTwo.width()))/parent.width()*100+"%";
                
+               console.log(ui.element.outerWidth())
+            
+
                divTwo.width(divTwoWidth);
-               console.log(ui.element.next())
+            //    console.log(ui.element.next())
                
            },
         //    stop: function(e, ui) 
