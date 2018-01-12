@@ -1,7 +1,7 @@
 #container {
     background: none no-repeat 0 0 scroll #aaa;
     height: 600px;
-    border-radius: 0 0 6px 6px;
+    /* border-radius: 0 0 6px 6px; */
     width: 1240px;
     position: relative;
     overflow: hidden;
@@ -14,7 +14,7 @@
     /* position: absolute; */
     float: left;
     z-index: 8000;
-    padding: 5px 0px 5px 0px;
+    /* padding: 5px 0px 5px 0px; */
   }
   
 
@@ -36,7 +36,7 @@
     float: left;
     
     /* position: absolute; */
-    left: 50%;
+    /* left: 50%; */
     background-color: white;
     z-index: 9000;    
   }
@@ -47,7 +47,7 @@
     float: left;
     
     /* position: absolute; */
-    left: 75%;
+    /* left: 75%; */
     background-color: white;
     z-index: 9000;
   }
@@ -64,7 +64,8 @@
     /* float: left; */
     
     left: 0;
-    width: 25%;
+    /* width: 25%; */
+    width: 307px;
   }
   #col2 {
     background: none no-repeat 0 0 scroll #111;
@@ -72,20 +73,25 @@
     /* left: calc(25% + 4px);
     right: calc(25% - 4px); */
     color: white;
-    width: 25%;
+    /* width: 25%; */
+    width: 307px;
+    
   }
   #col3 {
     background: none no-repeat 0 0 scroll #777;
-    border-radius: 0 0 6px 0; 
+    /* border-radius: 0 0 6px 0;  */
     /* left: calc(50% - 4px); */
-    width: 25%;
+    /* width: 25%; */
+    width: 307px;    
   }
 
   #col4 {
     background: none no-repeat 0 0 scroll #312234;
-    border-radius: 0 0 6px 0; 
+    /* border-radius: 0 0 6px 0;  */
     /* left: calc(75% - 4px); */
     right: 0;
-    width: 25%;
+    width: 307px;
+    
+    /* width: 25%; */
   } 
 

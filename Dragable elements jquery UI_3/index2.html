@@ -40,17 +40,21 @@
 
                var remainingSpace = parent.width() - ui.element.outerWidth();
 
-                
-
                divTwo = ui.element.next();
                
                divTwoWidth = (remainingSpace - (divTwo.outerWidth() - divTwo.width()))/parent.width()*100+"%";
+
+
+               console.log(divTwo.outerWidth())
+               console.log(parent.width())
                
-               console.log(ui.element.outerWidth())
-            
+               console.log(divTwo.width())
+               console.log(divTwoWidth)
 
                divTwo.width(divTwoWidth);
-            //    console.log(ui.element.next())
+
+              
+               
                
            },
         //    stop: function(e, ui) 

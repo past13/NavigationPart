@@ -20,9 +20,9 @@
       <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
     </div>
     <div id="splitter3" class="resizer third"></div>
-    <!-- <div id="col4" class="col">
+    <div id="col4" class="col">
       <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
-    </div> -->
+    </div>
   </div>
   <script> 
   
@@ -33,7 +33,7 @@
   templist = [];
   panels = [];
 
-  testpanel = [];
+  
 
     splitter1 = $("splitter1").leftpanelindex = 0;
     splitter2 = $("splitter2").leftpanelindex = 1;
@@ -52,14 +52,28 @@
 
   $(document).ready(function(){
     panels = $( "#container" ).children().not( ".resizer" ); 
-    // resizer = $( "#container" ).children().not( ".col" ); 
+    resizer = $( "#container" ).children().not( ".col" ); 
     
-        
+    testpanel = []; 
+    testpanel1 = []; 
 
-      col1 = $("#col1").innerWidth();
-      col2 = $("#col2").innerWidth();
-      col3 = $("#col3").innerWidth();
-      col4 = $("#col4").innerWidth();
+  // function sum(arr) {
+  //   let sum = 0;    
+
+  //   for (let item of arr) {
+  //     //console.log(item);
+  //     (!isNaN(item)) 
+  //     sum += item;
+  //   }
+  //   //console.log(sum)
+  //   return sum;
+  // }
+
+      // col1 = $("#col1").innerWidth();
+      // // col1 = $("#col1").clientWidth;
+      // col2 = $("#col2").innerWidth();
+      // col3 = $("#col3").innerWidth();
+      // col4 = $("#col4").innerWidth();
 
   $("#splitter1").on("mousedown", function(e){
     mousedownFirst = true;
@@ -68,8 +82,22 @@
     draggedpanel = splitter1;
 
     
-    testpanel =  activePanel(e, draggedpanel); 
-  // console.log(testpanel)
+    testpanel1 =  activePanel(e, draggedpanel); 
+
+    // columnid = testpanel1[0].id;
+    
+
+    first = testpanel1[0].clientWidth;
+    second = testpanel1[1].clientWidth;
+  
+    // allcol = firstcolumnwidth + secondcolumnwidth;
+    
+
+  
+    console.log(first);    
+    console.log(second);
+    // console.log(testpanel)
+
     return false;
 //   }).on("mousemove", function(e){
     
@@ -81,9 +109,27 @@
     mousedownThird = false;
     draggedpanel = splitter2;
 
-    testpanel =  activePanel(e, draggedpanel);
-  // console.log(testpanel)
-        
+    testpanel1 =  activePanel(e, draggedpanel); 
+
+    // columnid = testpanel1[0].id;
+    
+
+    first1 = testpanel1[0].clientWidth;
+    second1 = testpanel1[1].clientWidth;
+  
+    // allcol = firstcolumnwidth + secondcolumnwidth;
+    
+
+  
+    console.log(first1);    
+    console.log(second1);
+
+    // console.log(columnid);
+    // console.log(allcol);
+    // console.log(firstcolumnwidth);    
+    // console.log(secondcolumnwidth);
+    // console.log(testpanel)
+
     return false;
   });
 
@@ -111,6 +157,8 @@
    $("#container").on("mousemove", function (e){
 
     
+    // console.log(e.pageX);
+
     // todo!
     if (draggedpanel == -1) return;
  
@@ -121,59 +169,152 @@
     // var test1 = templist[0].getBoundingClientRect(); //gets bottom, height, left, right, top, width, x,y
 
     if (templist.length != 0 ) {
-
     }
 
     if(mousedownFirst) {
+      
       console.log('mousedownFirst')
 
       var left = $(".first");
-      var right = $(".second");
-    
-      // var delta = e.pageX - parentOffset.left;        
+      var right = $(".second"); 
+      
+      // var delta = e.pageX - parentOffset.left;      
+
       // handledrag(left, right, delta);
-      // if ($().width )
-    
-      // console.log(testpanel[0].clientWidth + testpanel[1].clientWidth)
+      // if ($().width )    
 
-      allcol = col1 + col2;
+      testpanel =  activePanel(e, draggedpanel);
+      
+      columnid = testpanel[0].id; 
 
-      var testasss = sum(testpanel);
-      // console.log(testasss)
+      firstcolumnwidth = testpanel[0].clientWidth;
+      secondcolumnwidth = testpanel[1].clientWidth;
+          
+      allcol = firstcolumnwidth + secondcolumnwidth;
 
 
-      var remainingSpace = allcol - e.pageX;
+      console.log(columnid);
+     
+   
+      // console.log(posit);
+      
+      // console.log(allcol);
+      // console.log(firstcolumnwidth);    
+      // console.log(secondcolumnwidth);
+      // console.log(testpanel)
 
+      var remainingSpace = allcol - e.pageX;  
+
+       console.log(allcol);
+      // console.log(remainingSpace);
+
+
+      //move to external method
       if (remainingSpace >= MINWIDTHCOLUMN && e.pageX >= MINWIDTHCOLUMN  ) {
-          $(".first").css("left", e.pageX);
-          $("#col1").width(e.pageX );      
+          $(".first").css("left");
+          $("#col1").width(e.pageX);      
           $("#col2").width(remainingSpace);
       }    
     }
     
-    if(mousedownSecond){
-    
+    if(mousedownSecond){   
+
     console.log('mousedownSecond')
-
-    allcol = col2 + col3;
-    console.log(allcol)
-    
-    var remainingSpace = allcol - e.pageX;
-
-
-      console.log("original" + ' ' + e.pageX)
-      console.log("remainingSpace" + ' ' + remainingSpace)
+  
+  
+    testpanel =  activePanel(e, draggedpanel);
       
-      if (remainingSpace >= MINWIDTHCOLUMN && e.pageX >= MINWIDTHCOLUMN  ) {
-          $(".second").css("left", e.pageX);
-          $("#col2").width(e.pageX );      
-          $("#col3").width(remainingSpace);
-      }
+    // var spliter1 = resizer[draggedpanel];   
+    // var div =  document.getElementById("splitter1");
+    
+    // var rect = div.getBoundingClientRect ();
+    //           x = rect.left;
+    //           // y = rect.top;
+    //           w = rect.right - rect.left;
+    //           h = rect.bottom - rect.top;
+
+    // console.log ("FIRST Spliter" + " Left: " + x + "\n Width: " + w);
+
+
+    // var spliter2 = resizer[draggedpanel];   
+    // var div =  document.getElementById("splitter2");
+    
+    // var rect = div.getBoundingClientRect ();
+    //           x = rect.left;
+    //           // y = rect.top;
+    //           w = rect.right - rect.left;
+    //           // h = rect.bottom - rect.top;
+
+    // console.log ("SECOND Spliter" +" Left: " + x + "\n Width: " + w );
+
+    // var spliter3 = resizer[draggedpanel];   
+    // var div =  document.getElementById("splitter3");
+    
+    // var rect = div.getBoundingClientRect ();
+    //           x = rect.left;
+    //           // y = rect.top;
+    //           w = rect.right - rect.left;
+    //           // h = rect.bottom - rect.top;
+
+    // console.log ("THIRD Spliter" +" Left: " + x +  "\n Width: " + w );   
+
+
+    columnid1 = testpanel[0].id;
+
+
+    firstcolumnwidth1 =  testpanel[0].clientWidth; //311;
+    secondcolumnwidth1 = testpanel[1].clientWidth; //311;
+     
+    allcol1 = firstcolumnwidth1 + secondcolumnwidth1;
+
+
+
+    // var remainingSpace = e.pageX - firstcolumnwidth1;
+
+    // divTwoWidth = (remainingSpace - (secondcolumnwidth1))/allcol1*100+"%";
+
+    // divTwoWidth = (remainingSpace - (divTwo.outerWidth() - divTwo.width()))/parent.width()*100+"%";
+    var remainingSpace =   e.pageX - allcol1 ; 
+
+    // console.log(e.pageX);
+    // console.log("remainingSpace" + " " + remainingSpace)
+      
+    //    console.log("all" + " " + allcol1);
+    //   console.log("first" + " " + firstcolumnwidth1);    
+    //   console.log("second" + " " + secondcolumnwidth1);
+      
+      firstukas = firstcolumnwidth1 + remainingSpace;
+      sekondukas = allcol1 - firstukas;
+
+
+    // var remainingSpace = allcol1 - e.pageX; //working +-  
+
+
+      console.log("first" + " " + firstukas);
+      console.log("second" + " " + sekondukas);
+    
+    
+      
+  //  if (remainingSpace >= MINWIDTHCOLUMN && e.pageX >= MINWIDTHCOLUMN  ) {
+          $(".second").css("left");
+          $("#col2").width(firstukas);
+          $("#col3").width( sekondukas);       
+               
+  //  }
 
       // $(".second").css("left", e.pageX - parentOffset.left);
       // $("#col2").css("width", e.pageX - parentOffset.left);
       // $("#col3").css("left", e.pageX - parentOffset.left);
     }
+
+
+
+
+
+
+
+
+
 
     if(mousedownThird){
       $(".third").css("left", e.pageX - parentOffset.left);
@@ -181,21 +322,8 @@
       $("#col4").css("left", e.pageX - parentOffset.left);
     }
     
-  });
-  
-  
+  }); 
 
-  function sum(arr) {
-    let sum = 0;    
-
-    for (let item of arr) {
-      console.log(item);
-      (!isNaN(item)) 
-      sum += item;
-    }
-    console.log(sum)
-    return sum;
-  }
 
 });
   </script> 
