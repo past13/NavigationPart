@@ -41,14 +41,51 @@
 
     MINWIDTHCOLUMN = 30;
 
+    function handledrag(e) {
+
+       columns = {};     
+
+       var remainingSpace = e.pageX - sum; 
+
+
+
+      col1 = testpanel[0]+remainingSpace;
+      col2 = sum - col1;
+
+
+      console.log(e.pageX )
+      console.log(sum)
+
+
+       columns.col1 = testpanel[0] + remainingSpace;
+       columns.col2 = sum - remainingSpace; 
+
+       return columns;
+    }
+
+
     function activePanel(e, index) {       
         templist = [];
-        for (var i = 0; i < panels.length; i++) {
-            if (index == i ) 
-            templist.push(panels[index], panels[index+1]);  
-        }
+        for (var i = 0; i < panels.length; i++) {          
+            if (index == i )             
+            // templist.push(panels[index], panels[index+1]);  
+            templist.push(panels[index].offsetWidth, panels[index+1].offsetWidth);  
+        }        
         return templist;
     }  
+
+    function add(a, b) {
+        return a + b;
+    }
+
+    function sum(arr) {
+      var sum = 0;
+      for (var item of arr) {     
+        // (!isNaN(item)) 
+        sum += item;
+      } 
+      return sum;
+    }
 
   $(document).ready(function(){
     panels = $( "#container" ).children().not( ".resizer" ); 
@@ -57,17 +94,7 @@
     testpanel = []; 
     testpanel1 = []; 
 
-  // function sum(arr) {
-  //   let sum = 0;    
 
-  //   for (let item of arr) {
-  //     //console.log(item);
-  //     (!isNaN(item)) 
-  //     sum += item;
-  //   }
-  //   //console.log(sum)
-  //   return sum;
-  // }
 
       // col1 = $("#col1").innerWidth();
       // // col1 = $("#col1").clientWidth;
@@ -80,23 +107,10 @@
     mousedownSecond = false;
     mousedownThird = false;  
     draggedpanel = splitter1;
-
     
-    testpanel1 =  activePanel(e, draggedpanel); 
+    testpanel =  activePanel(e, draggedpanel); 
 
-    // columnid = testpanel1[0].id;
-    
-
-    first = testpanel1[0].clientWidth;
-    second = testpanel1[1].clientWidth;
-  
-    // allcol = firstcolumnwidth + secondcolumnwidth;
-    
-
-  
-    console.log(first);    
-    console.log(second);
-    // console.log(testpanel)
+    sum = testpanel.reduce(add, 0);  
 
     return false;
 //   }).on("mousemove", function(e){
@@ -109,26 +123,12 @@
     mousedownThird = false;
     draggedpanel = splitter2;
 
-    testpanel1 =  activePanel(e, draggedpanel); 
+    testpanel =  activePanel(e, draggedpanel); 
 
-    // columnid = testpanel1[0].id;
+    console.log(testpanel)
     
 
-    first1 = testpanel1[0].clientWidth;
-    second1 = testpanel1[1].clientWidth;
-  
-    // allcol = firstcolumnwidth + secondcolumnwidth;
-    
-
-  
-    console.log(first1);    
-    console.log(second1);
-
-    // console.log(columnid);
-    // console.log(allcol);
-    // console.log(firstcolumnwidth);    
-    // console.log(secondcolumnwidth);
-    // console.log(testpanel)
+    sum = testpanel.reduce(add, 0);    
 
     return false;
   });
@@ -139,8 +139,10 @@
     mousedownThird = true;
     draggedpanel = splitter3; 
 
-    activePanel(e, draggedpanel);
-       
+    testpanel = activePanel(e, draggedpanel);  
+    
+    sum = testpanel.reduce(add, 0);    
+    
     return false;
   });
 
@@ -154,19 +156,15 @@
   });
 
     
-   $("#container").on("mousemove", function (e){
-
-    
-    // console.log(e.pageX);
+   $("#container").on("mousemove", function (e){    
 
     // todo!
     if (draggedpanel == -1) return;
  
     parentOffset = $(this).offset();
-    // parent = $(this).context;
+
     var delta = e.pageX - parentOffset.left;
     var activewidth = $("#container").innerWidth();
-    // var test1 = templist[0].getBoundingClientRect(); //gets bottom, height, left, right, top, width, x,y
 
     if (templist.length != 0 ) {
     }
@@ -183,149 +181,66 @@
       // handledrag(left, right, delta);
       // if ($().width )    
 
-      testpanel =  activePanel(e, draggedpanel);
+      var remainingSpace = sum - e.pageX;  
       
-      columnid = testpanel[0].id; 
-
-      firstcolumnwidth = testpanel[0].clientWidth;
-      secondcolumnwidth = testpanel[1].clientWidth;
-          
-      allcol = firstcolumnwidth + secondcolumnwidth;
-
-
-      console.log(columnid);
-     
-   
-      // console.log(posit);
-      
-      // console.log(allcol);
-      // console.log(firstcolumnwidth);    
-      // console.log(secondcolumnwidth);
-      // console.log(testpanel)
-
-      var remainingSpace = allcol - e.pageX;  
-
-       console.log(allcol);
-      // console.log(remainingSpace);
-
-
       //move to external method
       if (remainingSpace >= MINWIDTHCOLUMN && e.pageX >= MINWIDTHCOLUMN  ) {
-          $(".first").css("left");
+          $(".first").css("left");     
           $("#col1").width(e.pageX);      
           $("#col2").width(remainingSpace);
       }    
     }
     
     if(mousedownSecond){   
+    console.log('mousedownSecond')  
 
-    console.log('mousedownSecond')
-  
-  
-    testpanel =  activePanel(e, draggedpanel);
-      
-    // var spliter1 = resizer[draggedpanel];   
-    // var div =  document.getElementById("splitter1");
-    
-    // var rect = div.getBoundingClientRect ();
-    //           x = rect.left;
-    //           // y = rect.top;
-    //           w = rect.right - rect.left;
-    //           h = rect.bottom - rect.top;
+    var width = handledrag(e);  
 
-    // console.log ("FIRST Spliter" + " Left: " + x + "\n Width: " + w);
-
-
-    // var spliter2 = resizer[draggedpanel];   
-    // var div =  document.getElementById("splitter2");
-    
-    // var rect = div.getBoundingClientRect ();
-    //           x = rect.left;
-    //           // y = rect.top;
-    //           w = rect.right - rect.left;
-    //           // h = rect.bottom - rect.top;
-
-    // console.log ("SECOND Spliter" +" Left: " + x + "\n Width: " + w );
-
-    // var spliter3 = resizer[draggedpanel];   
-    // var div =  document.getElementById("splitter3");
-    
-    // var rect = div.getBoundingClientRect ();
-    //           x = rect.left;
-    //           // y = rect.top;
-    //           w = rect.right - rect.left;
-    //           // h = rect.bottom - rect.top;
-
-    // console.log ("THIRD Spliter" +" Left: " + x +  "\n Width: " + w );   
-
-
-    columnid1 = testpanel[0].id;
-
-
-    firstcolumnwidth1 =  testpanel[0].clientWidth; //311;
-    secondcolumnwidth1 = testpanel[1].clientWidth; //311;
-     
-    allcol1 = firstcolumnwidth1 + secondcolumnwidth1;
-
-
-
-    // var remainingSpace = e.pageX - firstcolumnwidth1;
-
-    // divTwoWidth = (remainingSpace - (secondcolumnwidth1))/allcol1*100+"%";
-
-    // divTwoWidth = (remainingSpace - (divTwo.outerWidth() - divTwo.width()))/parent.width()*100+"%";
-    var remainingSpace =   e.pageX - allcol1 ; 
-
-    // console.log(e.pageX);
-    // console.log("remainingSpace" + " " + remainingSpace)
-      
-    //    console.log("all" + " " + allcol1);
-    //   console.log("first" + " " + firstcolumnwidth1);    
-    //   console.log("second" + " " + secondcolumnwidth1);
-      
-      firstukas = firstcolumnwidth1 + remainingSpace;
-      sekondukas = allcol1 - firstukas;
-
-
-    // var remainingSpace = allcol1 - e.pageX; //working +-  
-
-
-      console.log("first" + " " + firstukas);
-      console.log("second" + " " + sekondukas);
-    
-    
-      
   //  if (remainingSpace >= MINWIDTHCOLUMN && e.pageX >= MINWIDTHCOLUMN  ) {
           $(".second").css("left");
-          $("#col2").width(firstukas);
-          $("#col3").width( sekondukas);       
+          $("#col2").width(width.col1 );
+          $("#col3").width(sum - width.col1);       //sum - width.col1 
                
   //  }
-
-      // $(".second").css("left", e.pageX - parentOffset.left);
-      // $("#col2").css("width", e.pageX - parentOffset.left);
-      // $("#col3").css("left", e.pageX - parentOffset.left);
     }
-
-
-
-
-
-
-
-
-
 
     if(mousedownThird){
-      $(".third").css("left", e.pageX - parentOffset.left);
-    //   $("#col3").css("width", e.pageX - parentOffset.left);
-      $("#col4").css("left", e.pageX - parentOffset.left);
-    }
-    
+
+      console.log('mousethird')  
+
+      var width = handledrag(e);
+
+      console.log(width)       
+      
+
+      $(".third").css("left");
+      $("#col3").width(testpanel[0]);
+      $("#col4").width(testpanel[1]);  
+    }    
   }); 
-
-
 });
   </script> 
 </body>
 </html>
+
+
+
+<!-- 
+// testpanel =  activePanel(e, draggedpanel);
+      
+// var spliter1 = resizer[draggedpanel];   
+// var div =  document.getElementById("splitter1");
+
+// var rect = div.getBoundingClientRect ();
+//           x = rect.left;
+//           // y = rect.top;
+//           w = rect.right - rect.left;
+//           h = rect.bottom - rect.top;
+
+// console.log ("FIRST Spliter" + " Left: " + x + "\n Width: " + w);
+
+// var remainingSpace = e.pageX - firstcolumnwidth1;
+
+// divTwoWidth = (remainingSpace - (secondcolumnwidth1))/allcol1*100+"%";
+
+// divTwoWidth = (remainingSpace - (divTwo.outerWidth() - divTwo.width()))/parent.width()*100+"%";  -->
