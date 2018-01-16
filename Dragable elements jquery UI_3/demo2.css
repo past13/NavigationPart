@@ -1,30 +1,44 @@
 #container {
     background: none no-repeat 0 0 scroll #aaa;
     height: 600px;
-    /* border-radius: 0 0 6px 6px; */
+    
     width: 1240px;
     position: relative;
     overflow: hidden;
     
     
   }
-  
-  .col {
-    height: 95%;    
-    /* position: absolute; */
-    float: left;
-    z-index: 8000;
-    /* padding: 5px 0px 5px 0px; */
+
+  h3 {
+    padding: 5px;
+    margin: 10px;
+    border-style: solid;
+    font: 25px arial, sans-serif;
+    color: #db1919;
+    
   }
   
 
+  .minimizecolumn {
+    width: 200px;
+  }
+
+
+  .col {
+    height: 95%;
+    float: left;
+    z-index: 8000;  
+  }
+  
+  .col > p {
+    color: #ffffff;
+  }
 
   .first {
     width: 4px;
     height: 100%;
     float: left;
-    /* position: absolute; */
-    
+    /* position: absolute; */    
     background-color: white;
     z-index: 9000;
     left: 25%;
@@ -53,45 +67,50 @@
   }
   
   .resizer:hover {
-
     cursor: col-resize;
   }
   
-  
+
+
   #col1 {
-    background: none no-repeat 0 0 scroll #444;
-    /* border-radius: 0 0 0 6px; */
-    /* float: left; */
-    
-    /* left: 0; */
-    /* width: 25%; */
+    background: none no-repeat 0 0 scroll rgb(112, 100, 100);
+
+    border-radius: 0 0 0 6px;
+    float: left;
     width: 307px;
   }
+
   #col2 {
     background: none no-repeat 0 0 scroll #111;
-    /* float: left; */
+    float: left;
     /* left: calc(25% + 4px);
     right: calc(25% - 4px); */
-    color: white;
-    /* width: 25%; */
-    width: 307px;
-    
+    width: 307px;    
   }
   #col3 {
     background: none no-repeat 0 0 scroll #777;
     /* border-radius: 0 0 6px 0;  */
+    float: left;
     /* left: calc(50% - 4px); */
-    /* width: 25%; */
-    width: 307px;    
+    width: 307px;        
   }
 
   #col4 {
     background: none no-repeat 0 0 scroll #312234;
     /* border-radius: 0 0 6px 0;  */
+    float: left;
     /* left: calc(75% - 4px); */
     /* right: 0; */
-    width: 307px;
-    
-    /* width: 25%; */
+    width: 307px;  
   } 
 
+  .rotate
+  {
+    -webkit-transition: -webkit-transform 1s;
+    -webkit-transform: rotate(90deg);
+  }
+  
+  .hair img
+  {
+    border: 1px solid #333;
+  }

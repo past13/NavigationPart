@@ -28,64 +28,31 @@
   
   draggedpanel = -1;
 
-  var totalWidth = 0;
-
   templist = [];
   panels = [];
-
-  
-
-    splitter1 = $("splitter1").leftpanelindex = 0;
-    splitter2 = $("splitter2").leftpanelindex = 1;
-    splitter3 = $("splitter3").leftpanelindex = 2;
+  currmousex = -1;
 
     MINWIDTHCOLUMN = 30;
 
-    function handledrag(e) {
-
-       columns = {};     
-
-       var remainingSpace = e.pageX - sum; 
-
-
-
-      col1 = testpanel[0]+remainingSpace;
-      col2 = sum - col1;
-
-
-      console.log(e.pageX )
-      console.log(sum)
-
-
-       columns.col1 = testpanel[0] + remainingSpace;
-       columns.col2 = sum - remainingSpace; 
-
-       return columns;
+function handledrag_new(deltax, leftpanelindex, leftpanel, rightpanel) {
+  var totalwidth = leftpanel.width() + rightpanel.width();
+  var newwidthleft = leftpanel.width() + deltax;
+  var newwidthright = rightpanel.width() - deltax;
+  if ((newwidthleft < 0) || (newwidthright < 0)) {
+    if (deltax > 0) {
+      newwidthright = 0;
+      newwidthleft = totalwidth;
     }
-
-
-    function activePanel(e, index) {       
-        templist = [];
-        for (var i = 0; i < panels.length; i++) {          
-            if (index == i )             
-            // templist.push(panels[index], panels[index+1]);  
-            templist.push(panels[index].offsetWidth, panels[index+1].offsetWidth);  
-        }        
-        return templist;
-    }  
-
-    function add(a, b) {
-        return a + b;
+    else
+    {
+      newwidthleft = 0;
+      newwidthright = totalwidth;
     }
+  }
 
-    function sum(arr) {
-      var sum = 0;
-      for (var item of arr) {     
-        // (!isNaN(item)) 
-        sum += item;
-      } 
-      return sum;
-    }
+  leftpanel.width(newwidthleft);
+  rightpanel.width(newwidthright);
+}
 
   $(document).ready(function(){
     panels = $( "#container" ).children().not( ".resizer" ); 
@@ -103,144 +70,40 @@
       // col4 = $("#col4").innerWidth();
 
   $("#splitter1").on("mousedown", function(e){
-    mousedownFirst = true;
-    mousedownSecond = false;
-    mousedownThird = false;  
-    draggedpanel = splitter1;
-    
-    testpanel =  activePanel(e, draggedpanel); 
-
-    sum = testpanel.reduce(add, 0);  
-
+    draggedpanel = 0;
     return false;
-//   }).on("mousemove", function(e){
-    
   });
 
   $("#splitter2").on("mousedown", function(e){
-    mousedownFirst = false;     
-    mousedownSecond = true;
-    mousedownThird = false;
-    draggedpanel = splitter2;
-
-    testpanel =  activePanel(e, draggedpanel); 
-
-    console.log(testpanel)
-    
-
-    sum = testpanel.reduce(add, 0);    
-
+    draggedpanel = 1;
     return false;
   });
 
   $("#splitter3").on("mousedown", function(e){
-    mousedownFirst = false; 
-    mousedownSecond = false;
-    mousedownThird = true;
-    draggedpanel = splitter3; 
-
-    testpanel = activePanel(e, draggedpanel);  
-    
-    sum = testpanel.reduce(add, 0);    
-    
+    draggedpanel = 2; 
     return false;
   });
 
   $("#container").on("mouseup", function(e){ 
-
-    mousedownFirst = false;      
-    mousedownSecond = false;
-    mousedownThird = false;
-      
     draggedpanel = -1;
   });
-
     
-   $("#container").on("mousemove", function (e){    
+  $("#container").on("mousemove", function (e){    
+    var mousex = e.pageX;
+    if (draggedpanel != -1) {
+      parentOffset = $(this).offset();
 
-    // todo!
-    if (draggedpanel == -1) return;
- 
-    parentOffset = $(this).offset();
+      var deltax =  mousex - currmousex;
+      var leftpanel = panels[draggedpanel];
+      var rightpanel = panels[draggedpanel + 1];
 
-    var delta = e.pageX - parentOffset.left;
-    var activewidth = $("#container").innerWidth();
-
-    if (templist.length != 0 ) {
-    }
-
-    if(mousedownFirst) {
-      
-      console.log('mousedownFirst')
-
-      var left = $(".first");
-      var right = $(".second"); 
-      
-      // var delta = e.pageX - parentOffset.left;      
-
-      // handledrag(left, right, delta);
-      // if ($().width )    
-
-      var remainingSpace = sum - e.pageX;  
-      
-      //move to external method
-      if (remainingSpace >= MINWIDTHCOLUMN && e.pageX >= MINWIDTHCOLUMN  ) {
-          $(".first").css("left");     
-          $("#col1").width(e.pageX);      
-          $("#col2").width(remainingSpace);
-      }    
-    }
-    
-    if(mousedownSecond){   
-    console.log('mousedownSecond')  
-
-    var width = handledrag(e);  
-
-  //  if (remainingSpace >= MINWIDTHCOLUMN && e.pageX >= MINWIDTHCOLUMN  ) {
-          $(".second").css("left");
-          $("#col2").width(width.col1 );
-          $("#col3").width(sum - width.col1);       //sum - width.col1 
-               
-  //  }
-    }
-
-    if(mousedownThird){
-
-      console.log('mousethird')  
-
-      var width = handledrag(e);
-
-      console.log(width)       
-      
-
-      $(".third").css("left");
-      $("#col3").width(testpanel[0]);
-      $("#col4").width(testpanel[1]);  
-    }    
+      handledrag_new(deltax, draggedpanel, $(leftpanel), $(rightpanel));
+   }
+   currmousex = mousex;
   }); 
-});
+
+});  // .onready()
   </script> 
 </body>
 </html>
 
-
-
-<!-- 
-// testpanel =  activePanel(e, draggedpanel);
-      
-// var spliter1 = resizer[draggedpanel];   
-// var div =  document.getElementById("splitter1");
-
-// var rect = div.getBoundingClientRect ();
-//           x = rect.left;
-//           // y = rect.top;
-//           w = rect.right - rect.left;
-//           h = rect.bottom - rect.top;
-
-// console.log ("FIRST Spliter" + " Left: " + x + "\n Width: " + w);
-
-// var remainingSpace = e.pageX - firstcolumnwidth1;
-
-// divTwoWidth = (remainingSpace - (secondcolumnwidth1))/allcol1*100+"%";
-
-// divTwoWidth = (remainingSpace - (divTwo.outerWidth() - divTwo.width()))/parent.width()*100+"%";  -->
