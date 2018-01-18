@@ -2,28 +2,49 @@
 <html>
 <head>
     <meta charset=utf-8 />
+    <link rel="stylesheet" href="demo2.css">
     <style type="text/css">
 
-      .showbox {
-        float: left;
-        margin: 4em 1em;
-        width: 100px;
-        height: 60px;
-        border: 2px solid green;
-        background-color: #fff;
-        line-height: 60px;
-        text-align: center;
+/* div {
+  width:100px; height:40px;
+ border: solid;
+  animation:flipAround 1s; */
+   /* transform-origin:0 0 0;  */
+/* } */
+  /* @keyframes flipAround {
+    25% { transform-origin: 0 100 0; animation-mode:forwards; transform:rotate(-90deg); } */
 
-        transition: 1s ease-in-out;
-      }
-      .showbox.slideright:hover {
-  
-        transform: translate(3em,0);
-      }
+    /* 25.001% { transform-origin:0 100 0; transform:translateX(200px); } */
+    /* 50% { transform-origin:bottom; transform:translateX(200px) rotateX(-180deg); } */
+    /* 50.001% { transform-origin:left; transform:translateX(200px) translateY(200px); }
+    75% { transform-origin:left; transform-origin:left; transform:translateX(200px) translateY(200px) rotateY(180deg); }
+    75.001% { transform-origin:top; transform:translateY(200px); }
+    100% { transform-origin:top; transform-origin:top; transform:translateY(200px) rotateX(180deg); } */
+  /* } */
     
     </style>
     <body>
-        <div class="showbox slideright">box 1</div>
-
+        <div id="container">
+            <div id="splitter0" class="resizer first"></div>
+            <div id="col1" class="col" >
+                <h3 id="panel1" >First container</h3>
+                <p class="tekstas">"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
+            </div>
+            <div id="splitter1" class="resizer first"></div>
+            <div id="col2" class="col">
+                <h3 id="panel2" >Second container</h3>        
+                <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
+            </div>
+            <div id="splitter2" class="resizer second"></div>
+            <div id="col3" class="col">
+                <h3 id="panel3" >Third container</h3> 
+                <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
+            </div>
+            <div id="splitter3" class="resizer third"></div>
+            <div id="col4" class="col">
+                <h3 id="panel4"> Four container</h3>
+                <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
+            </div>
+        </div>
     </body>
 </html>

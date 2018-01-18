@@ -1,28 +1,20 @@
 #container {
     background: none no-repeat 0 0 scroll #aaa;
-    height: 600px;
-    
-    width: 1240px;
+    height: 600px;    
+    width: 1388px;
     position: relative;
-    overflow: hidden;
-    
-    
+    overflow: hidden;  
   }
 
   h3 {
     
-    padding: 5px;
+    /* padding: 5px; */
     margin: 10px;
     /* border-style: solid; */
     font: 25px arial, sans-serif;
-    color: #db1919;
-    
+    color: #db1919;    
   }
   
-
-
-
-
   .col {
     height: 95%;
     float: left;
@@ -36,10 +28,8 @@
   .first {
     width: 40px;
     height: 100%;
-    float: left;
-    /* position: absolute; */    
-    background-color: rgba(210, 231, 17, 0.938);
-  
+    float: left; 
+    background-color: rgba(210, 231, 17, 0.938);  
     z-index: 9000;
     left: 25%;
   }
@@ -48,9 +38,6 @@
     width: 40px;
     height: 100%;
     float: left;
-    
-    /* position: absolute; */
-    /* left: 50%; */
     background-color: rgba(210, 231, 17, 0.938);
     z-index: 9000;    
   }
@@ -58,24 +45,17 @@
   .third {
     width: 40px;
     height: 100%;
-    float: left;
-    
-    /* position: absolute; */
-    /* left: 75%; */
-    background-color: rgba(210, 231, 17, 0.938);
-  
+    float: left;  
+    background-color: rgba(210, 231, 17, 0.938);  
     z-index: 9000;
   }
   
   .resizer:hover {
     cursor: col-resize;
-  }
-  
-
+  }  
 
   #col1 {
     background: none no-repeat 0 0 scroll rgb(112, 100, 100);
-
     float: left;
     width: 307px;
   }
@@ -83,13 +63,10 @@
   #col2 {
     background: none no-repeat 0 0 scroll #111;
     float: left;
-    /* left: calc(25% + 4px);
-    right: calc(25% - 4px); */
     width: 307px;    
   }
   #col3 {
     background: none no-repeat 0 0 scroll #777;
-    /* border-radius: 0 0 6px 0;  */
     float: left;
     /* left: calc(50% - 4px); */
     width: 307px;        
@@ -97,21 +74,38 @@
 
   #col4 {
     background: none no-repeat 0 0 scroll #312234;
-    /* border-radius: 0 0 6px 0;  */
     float: left;
-    /* left: calc(75% - 4px); */
-    /* right: 0; */
     width: 307px;  
   } 
 
-
-#panel1 {
-  width: 75%;
-  float: left;
-  min-width: 170px;
+  .minimzepanel {
+    height: 50px;
+    width: 200px;
+    justify-content: center;
+    align-content: center;
+    color: red;
+    transform: translate(-140px, 90px) rotate(90deg);   
+  }
   
+  .widget-content {
+    position: left;
+    width: 300px;
+    height: 300px;
+    border: 1px solid #000;
+}
+.btn-minimize {
+  position: left;
   
+    width: 50px;
+    height: 50px;
+    background-color: #F00;
+}
+.btn-minimize.btn-plus {
+    background-color: #0F0;
 }
 
-  
-  
+#toggle {
+  width: 100px;
+  height: 100px;
+  background: #ccc;
+}

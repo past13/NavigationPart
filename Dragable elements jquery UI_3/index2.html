@@ -11,61 +11,34 @@
 
 
 <style>
+.square {
+  height: 100px;
+  width: 100px;
+  background-color: #3d9970;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-content: center;
+  color: white;
+  padding: 5px;
+  animation: shimmy 3s infinite;
+  animation-direction: alternate;
+}
 
+@keyframes shimmy {
+  0% {
+    transform: translate(0, 0);    
+  }
+  100% {
+    transform: translate(20px, 50px);
+  }
+}
 </style> 
 </head>
 
 
 <body>
-        <div class="wrap">
-                <div class="resizable resizable1"></div>
-                <div class="resizable resizable2"></div>
-                <div class="resizable resizable3"></div>
-                <div class="resizable resizable3"></div>
-                
-            </div>
+
 </body>
-<script>
-   $(function () 
-   {
-       $(".resizable1").resizable(
-       {
-           autoHide: false,
-           handles: 'w, e',
-        // containment: ".resizable",
 
-           resize: function(e, ui) 
-           {               
-               var parent = ui.element.parent();
-
-               var remainingSpace = parent.width() - ui.element.outerWidth();
-
-               divTwo = ui.element.next();
-               
-               divTwoWidth = (remainingSpace - (divTwo.outerWidth() - divTwo.width()))/parent.width()*100+"%";
-
-
-               console.log(divTwo.outerWidth())
-               console.log(parent.width())
-               
-               console.log(divTwo.width())
-               console.log(divTwoWidth)
-
-               divTwo.width(divTwoWidth);
-
-              
-               
-               
-           },
-        //    stop: function(e, ui) 
-        //    {
-        //        var parent = ui.element.parent();
-        //        ui.element.css(
-        //        {
-        //            width: ui.element.width()/parent.width()*100+"%",
-        //        });
-        //    }
-       });
-   });
-      </script> 
 </html>
