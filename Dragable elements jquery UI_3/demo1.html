@@ -18,12 +18,12 @@
                     <h3 id="panel2" onclick="hidepanel(this)">Second container</h3>        
                     <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
                 </div>
-                <div id="splitter2" class="resizer second"></div>
+                <div id="splitter2" class="resizer first"></div>
                 <div id="col3" class="col">
                     <h3 id="panel3" onclick="hidepanel(this)">Third container</h3> 
                     <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
                 </div>
-                <div id="splitter3" class="resizer third"></div>
+                <div id="splitter3" class="resizer first"></div>
                 <div id="col4" class="col">
                     <h3 id="panel4" onclick="hidepanel(this)">Four container</h3>
                     <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
@@ -36,16 +36,81 @@
           currmousex = -1;
           MINPANELWIDTH = 220;
           
+      
+
+        function recalculatecol(currentcol, container) {
+
+          var slibing = currentcol.nextSibling;
+
+          var contwidth = container.clientWidth;
+
+          var newcolumn = contwidth * 0.25;
+          console.log(newcolumn)
+        
+        
+          return newcolumn;
+        }
+
          function hidepanel(panelnode) {   
+          var aaa;
+          // && parent.id != 'col1' && parent.id != 'col4'
+          var container = document.getElementById('container'); 
+
+          var div4 = container.lastElementChild; 
+          var div1 = container.firstElementChild; 
+
+          var parent = document.getElementById(panelnode.id).parentElement; 
+
+
+
+          var next = $( '.col' ).first()[0].id;
+          var last = $( '.col' ).last()[0].id;
+
+          console.log(parent.id)
+          
+          var columns = container.querySelectorAll(".col");
+          var aaa1 = Array.prototype.slice.call(columns);
+          aaa1.splice(1,1);
+
+          console.log(aaa1)
+       
+          
+
+          if (parent.id !== 'col1') {         
+
+
+          
+          
+          }
+    
+
+          if (parent.offsetWidth > 0) {
+
+            $(parent).animate({
+            width: 0       
+            }, 500);
+
+            $(div4).animate({    
+            width: div4.offsetWidth + parent.offsetWidth
+            }, 500);
+          } 
+          
+          if (parent.offsetWidth === 0 ) {
+            $(parent).animate({    
+            width: aaa = recalculatecol(parent, container)
+            }, 500);
+
+
+            // if (parent.id === 'col1') {
+            //   $(div4).animate({    
+            //   width: div4.clientWidth - aaa
+            //   }, 500);
+            // }            
+          }        
+
+            document.getElementById(panelnode.id).classList.add('minimzepanel');           
         
-            var parent = document.getElementById(panelnode.id).parentElement; 
-            
-            $("#col1").slideToggle();
-        
-            document.getElementById(panelnode.id).classList.add('minimzepanel');
-            // $( parent ).fadeOut( 1600, "linear", minimzepanel );
-        
-          };
+       };
         
         
         function handledrag_new(deltax, leftpanelindex, leftpanel, rightpanel) {

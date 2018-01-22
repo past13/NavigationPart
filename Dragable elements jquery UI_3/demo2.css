@@ -34,7 +34,7 @@
     left: 25%;
   }
   
-  .second {
+  /* .second {
     width: 40px;
     height: 100%;
     float: left;
@@ -48,7 +48,7 @@
     float: left;  
     background-color: rgba(210, 231, 17, 0.938);  
     z-index: 9000;
-  }
+  } */
   
   .resizer:hover {
     cursor: col-resize;
@@ -86,7 +86,7 @@
     color: red;
     transform: translate(-140px, 90px) rotate(90deg); 
     float: left;
-      
+    position: absolute;
   }
   
   .widget-content {
