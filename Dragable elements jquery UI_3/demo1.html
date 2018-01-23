@@ -34,82 +34,120 @@
           draggedpanel = -1;
           panels = [];
           currmousex = -1;
-          MINPANELWIDTH = 220;
-          
+          MINPANELWIDTH = 307;
+          CONTAINERLENGTH = 1388;
       
 
-        function recalculatecol(currentcol, container) {
 
-          var slibing = currentcol.nextSibling;
+ 
 
-          var contwidth = container.clientWidth;
 
-          var newcolumn = contwidth * 0.25;
-          console.log(newcolumn)
-        
-        
-          return newcolumn;
+        // function recalculate(first, last, panelnode, parent, columns) {   
+          function recalculate(parent, columns, first, last, panelnode) {
+          
+            var container = $('#container').width();            
+
+            var leftremaining = parent.offsetLeft;
+            var rightremaining = container - (document.getElementById(parent.id).offsetLeft + document.getElementById(parent.id).offsetWidth);
+            
+
+
+            console.log(panelnode);
+
+            
+            // let myArray = Array.from(columns);
+            // var max = 0;
+
+           
+            // columns.forEach(function(part, index, columns, first, last) {               
+            //   max = Math.max(columns[index].clientWidth);              
+            //   return max;
+            // });
+
+
+           
+
+
+          // if (parent.offsetWidth > 0) {      
+          //  if (parent.id == 'col4') {
+
+          //     $(parent).animate({
+          //       width: 0       
+          //     }, 500);
+
+          //     $('#col1').animate({    
+          //       width: last.clientWidth + parent.clientWidth
+          //     }, 500);
+          //   }
+          //   else {
+          //     $(parent).animate({
+          //       width: 0       
+          //     }, 500);
+
+          //     $('#col4').animate({    
+          //       width: last.clientWidth + parent.offsetWidth
+          //     }, 500);   
+          //   }
+          // }  
+
+          // if (parent.clientWidth === 0 ) {
+            // if (parent.id == 'col1') {
+            //   $(parent).animate({
+            //     width: MINPANELWIDTH       
+            //   }, 500);
+
+            //   $('#col4').animate({    
+            //     width: last.clientWidth - MINPANELWIDTH
+            //   }, 500);       
+            // } 
+            // if (parent.id == 'col4') {
+            //   $(parent).animate({
+            //     width: MINPANELWIDTH       
+            //   }, 500);
+
+            //   $(parent).animate({
+            //     width: MINPANELWIDTH       
+            //   }, 500);
+
+              // $('#col1').animate({    
+              //   // width: calculatewidth(parent, first, last, columns)
+              // }, 500);
+            // }
+            // else {
+            //   $(parent).animate({
+            //     width: MINPANELWIDTH       
+            //   }, 500);
+
+            //   $('#col4').animate({    
+            //     width: remainwidth - last.clientWidth - MINPANELWIDTH
+            //   }, 500);   
+            // }
+          // } 
+          // document.getElementById(panelnode.id).classList.add('minimzepanel');
+          
         }
 
          function hidepanel(panelnode) {   
-          var aaa;
-          // && parent.id != 'col1' && parent.id != 'col4'
-          var container = document.getElementById('container'); 
 
-          var div4 = container.lastElementChild; 
-          var div1 = container.firstElementChild; 
-
-          var parent = document.getElementById(panelnode.id).parentElement; 
-
-
-
-          var next = $( '.col' ).first()[0].id;
-          var last = $( '.col' ).last()[0].id;
-
-          console.log(parent.id)
+          var parent = document.getElementById(panelnode.id).parentElement;                    
           
-          var columns = container.querySelectorAll(".col");
-          var aaa1 = Array.prototype.slice.call(columns);
-          aaa1.splice(1,1);
+          var first = $( '.col' ).first()[0];
+          var last = $( '.col' ).last()[0];
 
-          console.log(aaa1)
+          var columns = container.querySelectorAll(".col" );          
        
-          
 
-          if (parent.id !== 'col1') {         
-
-
-          
-          
-          }
-    
-
-          if (parent.offsetWidth > 0) {
-
-            $(parent).animate({
-            width: 0       
-            }, 500);
-
-            $(div4).animate({    
-            width: div4.offsetWidth + parent.offsetWidth
-            }, 500);
-          } 
-          
-          if (parent.offsetWidth === 0 ) {
-            $(parent).animate({    
-            width: aaa = recalculatecol(parent, container)
-            }, 500);
-
-
-            // if (parent.id === 'col1') {
-            //   $(div4).animate({    
-            //   width: div4.clientWidth - aaa
-            //   }, 500);
-            // }            
-          }        
-
-            document.getElementById(panelnode.id).classList.add('minimzepanel');           
+          var test = recalculate(parent, columns, first, last, panelnode);
+       
         
+
+
+          // var test = Array.prototype.max = function() {
+          //   return Math.max.apply(null, myArray);
+          // };
+                    
+
+          // widthcol = recalculate(first, last, panelnode, parent, columns);        
        };
         
         
@@ -119,8 +157,8 @@
           var newwidthright = rightpanel.width() - deltax;
         
           leftpanelid = leftpanel[0].firstElementChild.id;
-          rightpanelid = rightpanel[0].firstElementChild.id;
-        
+          rightpanelid = rightpanel[0].firstElementChild.id;  
+
           if ((newwidthleft < 0) || (newwidthright < 0)) {
             if (deltax > 0) {
               newwidthright = 0;
@@ -176,7 +214,7 @@
             var mousex = e.pageX;
             if (draggedpanel != -1) {
               parentOffset = $(this).offset();
-              var deltax =  mousex - currmousex;      
+              var deltax =  mousex - currmousex;             
               var leftpanel = panels[draggedpanel];
               var rightpanel = panels[draggedpanel + 1];
               handledrag_new(deltax, draggedpanel, $(leftpanel), $(rightpanel));
