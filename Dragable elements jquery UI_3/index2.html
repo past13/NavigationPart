@@ -8,37 +8,26 @@
   <link rel="stylesheet" href="index2.css">
   <script src="jquery-ui-1.12.1/external/jquery/jquery.js"></script>
   <script src="jquery-ui-1.12.1/jquery-ui.js"></script>
-
-
-<style>
-.square {
-  height: 100px;
-  width: 100px;
-  background-color: #3d9970;
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  align-content: center;
-  color: white;
-  padding: 5px;
-  animation: shimmy 3s infinite;
-  animation-direction: alternate;
-}
-
-@keyframes shimmy {
-  0% {
-    transform: translate(0, 0);    
-  }
-  100% {
-    transform: translate(20px, 50px);
-  }
-}
-</style> 
-</head>
-
+  <style>
+  </style> 
+  </head>
 
 <body>
 
-</body>
+  <p>This example uses the HTML DOM to assign an "onresize" event to the body element.</p>
 
+  <p>Try to resize the browser window.</p>
+  
+  <p>Window resized <span id="demo">0</span> times.</p>
+  
+</body>
+<script>
+document.getElementById("demo").onresize = function() {myFunction()};
+
+var x = 0;
+function myFunction() {
+    var txt = x += 1;
+    document.getElementById("demo").innerHTML = txt;
+}
+</script>
 </html>
