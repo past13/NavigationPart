@@ -34,33 +34,54 @@
     panels = [];
     currmousex = -1;
     MINPANELWIDTH = 307;
- 
+
+    var newwidthcol = 0;
+      
+    function columncallculation(nextcolumn, column) {
+      if (nextcolumn.clientWidth > MINPANELWIDTH &&  nextcolumn.clientWidth == MINPANELWIDTH) {
+        object {
+          newwidthcol += Math.abs(MINPANELWIDTH - nextcolumn.clientWidth);
+        nextcolumnid = nextcolumn.id;
+        }
+       
+      }
+      else {
+
+      }
+
+      return newwidthcol;
+    }
   
-    function resizecolumn(parent, columns, panelnode, last) {
+    function resizecolumn(column, columns, panelnode, last) {
       
       // var container = $('#container').width(); 
       // var leftremaining = elem.offsetLeft;
       // var rightremaining = container - (document.getElementById(elem.id).offsetLeft + document.getElementById(elem.id).offsetWidth);  
-     
+     console.log(column);
 
-      var newelement = parent.nextElementSibling;      
+      var nextcolumn = parent.nextElementSibling;      
       var collectwidth = 0;
       
 
-      while (newelement) { 
-        console.log(newelement)
+      while (nextcolumn) { 
 
-        if (newelement.classList.contains('col')) {  
+        if (nextcolumn.classList.contains('col')) {  
+
+          newwidthcol = columncallculation(nextcolumn, column);
+
+
           console.log('found')
-          
+          console.log(nextcolumn)
+
+
+
+
         }  
     
-          newelement = newelement.nextElementSibling;
+        nextcolumn = nextcolumn.nextElementSibling;
             
-
-        if (newelement == null ) {
-          break;
-
+        if (nextcolumn == null ) { 
+          break; 
         }
             
       }
