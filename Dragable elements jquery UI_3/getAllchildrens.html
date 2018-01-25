@@ -33,107 +33,132 @@
     draggedpanel = -1;
     panels = [];
     currmousex = -1;
-    MINPANELWIDTH = 307;
-
-    var newwidthcol = 0;
+    MINPANELWIDTH = 307;    
       
-    function columncallculation(nextcolumn, column) {
-      if (nextcolumn.clientWidth > MINPANELWIDTH &&  nextcolumn.clientWidth == MINPANELWIDTH) {
-        object {
-          newwidthcol += Math.abs(MINPANELWIDTH - nextcolumn.clientWidth);
-        nextcolumnid = nextcolumn.id;
-        }
+    var object = {};
+    var newlistobj = {};
+    var increcemntid = 0;
+
+    //animate columns
+    function animatecolumns(listcol) {    
+      
+       var currentcolumnwidth = listcol[0].currentcolumnwidth;
+
+       console.log(listcol[0].currentcolumnid ) //listcol[key].column.oldwidtcol - 
        
+       var colid = listcol[0].currentcolumnid;
+       var nextcol = listcol[0].columnid; 
+
+
+       console.log(listcol[0].column.columnid)
+
+      if (currentcolumnwidth > 0) {
+        Object.keys(listcol).forEach(function(key) {
+          console.log('booaommm')
+          
+
+
+          
+          // $(listcol[key].currentcolumnid).animate({
+          $('#col1').animate({            
+              width: 0
+          }, 500)
+
+
+          $('#col2').animate({
+              width: listcol[key].oldwidtcol + listcol[key].currentcolumnwidth   //-listcol[key].columnwidth
+          }, 500)
+        });        
+      } 
+      if (currentcolumnwidth <= 0) {
+        console.log('boom1')
+        // $(listcol[key].columnid).animate({
+        //       width: listcol[key].column.oldwidtcol - listcol[key].column.newwidthcol     //-listcol[key].columnwidth
+        //   }, 500)
+      
       }
-      else {
+      if (currentcolumnwidth === 0) {
 
       }
-
-      return newwidthcol;
     }
-  
-    function resizecolumn(column, columns, panelnode, last) {
-      
-      // var container = $('#container').width(); 
-      // var leftremaining = elem.offsetLeft;
-      // var rightremaining = container - (document.getElementById(elem.id).offsetLeft + document.getElementById(elem.id).offsetWidth);  
-     console.log(column);
 
-      var nextcolumn = parent.nextElementSibling;      
-      var collectwidth = 0;
-      
-
-      while (nextcolumn) { 
-
+    //need to test accurate
+    function recalculatecolumns(objlist) {
+      var sum = 0;
+      var id;
+      var unusedwidth = 0;
+      var gapcolumn = false;  
+      Object.keys(objlist).forEach(function(key) {
+        var width = objlist[key].column.newwidthcol;         
+        if (sum < MINPANELWIDTH) {    
+          sum += width; 
+          objlist[key].gapcolumn = false;         
+        }       
+        if (sum > MINPANELWIDTH) {     
+          objlist[key].unused = Math.abs(sum - MINPANELWIDTH);  
+          objlist[key].gapcolumn = true;
+        } 
+        if (sum === MINPANELWIDTH) {
+          return objlist;                  
+        }
+      });        
+      return objlist;
+    }
+    //get list of objects where columns over 307 width
+    function listofreducecolumns(nextcolumn, column) { 
+      if (nextcolumn.clientWidth > MINPANELWIDTH && nextcolumn.clientWidth != MINPANELWIDTH) {
+        object[increcemntid++] = {  
+         column : {
+            newwidthcol : newwidthcol = Math.abs(MINPANELWIDTH - nextcolumn.clientWidth),
+            oldwidtcol : nextcolumn.clientWidth,
+            columnid : nextcolumn.id,   
+         },    
+            currentcolumnid : column.id,
+            currentcolumnwidth : column.clientWidth          
+        }        
+      }      
+      return object;
+    }
+    //collect all columns except splitters
+    function resizecolumn(column, panelnode) { 
+      increcemntid = 0;
+      var nextcolumn = column.nextElementSibling;      
+      var collectwidthlist = {};
+      while (nextcolumn) {         
         if (nextcolumn.classList.contains('col')) {  
-
-          newwidthcol = columncallculation(nextcolumn, column);
-
-
-          console.log('found')
-          console.log(nextcolumn)
-
-
-
-
-        }  
-    
-        nextcolumn = nextcolumn.nextElementSibling;
-            
+            newlistobj = listofreducecolumns(nextcolumn, column);         
+        }      
+        nextcolumn = nextcolumn.nextElementSibling;            
         if (nextcolumn == null ) { 
           break; 
-        }
-            
-      }
-      
-
-
-      // do { 
-      //     do {      
-                
-      //         collectwidth += 1;
-      //         console.log(newelement) 
-      //       }  
-      //     while (MINPANELWIDTH >= collectwidth)   
-        
-      // }
-      // while (newelement.id == last.id) 
-     
-          
-      
-      
-      return collectwidth;
+        }            
+      } 
+      collectwidthlist = recalculatecolumns(newlistobj);  
+      return collectwidthlist;
     }
-
-
   
    function hidepanel(panelnode) {  
 
-    var parent = document.getElementById(panelnode.id).parentElement;  
-    var first = $('.col').first()[0];
-    var last = $('.col').last()[0];
+    var parent = document.getElementById(panelnode.id).parentElement;
     var columns = container.querySelectorAll(".col" ); 
-	
-      if (parent.offsetWidth > 0) {   
-        document.getElementById(panelnode.id).classList.add('minimzepanel');   
-     $(parent).animate({
-       width: 0
-       }, 500);
-    }
-    
-    if (parent.clientWidth === 0 ) {
-      document.getElementById(panelnode.id).classList.remove('minimzepanel'); 
-      
 
-      var newwidthcol = resizecolumn(parent, columns, panelnode, last);
+    var listcol = resizecolumn(parent, panelnode);
 
+    animatecolumns(listcol);
 
+    //   if (parent.offsetWidth > 0) {   
+    //     document.getElementById(panelnode.id).classList.add('minimzepanel');   
+    //   $(parent).animate({
+    //     width: 0
+    //     }, 500);
+    //   }    
+    // if (parent.clientWidth === 0 ) {
 
-
-      $(parent).animate({
-        width: newwidthcol
-        }, 500); 
-    }
+    //   document.getElementById(panelnode.id).classList.remove('minimzepanel'); 
+    //   $(parent).animate({
+    //     width: newwidthcol
+    //     }, 500);
+    // }
   };
   
   function handledrag_new(deltax, leftpanelindex, leftpanel, rightpanel) {
@@ -155,7 +180,7 @@
         newwidthright = totalwidth;
       }
     }
-  
+  //move to another method adding class 'minimize'
     if (leftpanel.width() <= MINPANELWIDTH) {
       document.getElementById(leftpanelid).classList.add('minimzepanel');
     }
