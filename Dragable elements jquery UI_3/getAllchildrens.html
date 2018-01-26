@@ -35,51 +35,80 @@
     currmousex = -1;
     MINPANELWIDTH = 307;    
       
-    var object = {};
     var newlistobj = {};
     var increcemntid = 0;
 
     //animate columns
-    function animatecolumns(listcol) {    
-      
-       var currentcolumnwidth = listcol[0].currentcolumnwidth;
+    function animatecolumns(listcol) {   
 
-       console.log(listcol[0].currentcolumnid ) //listcol[key].column.oldwidtcol - 
-       
-       var colid = listcol[0].currentcolumnid;
-       var nextcol = listcol[0].columnid; 
+      console.log('boom')         
+      var numberPattern = /\d+/g;
+      var prefix = '#col';
+      var prefixpanel = 'panel';
 
+      var currentcolumnwidth = 0;  
+      var length = listcol[1].length;
 
-       console.log(listcol[0].column.columnid)
+       if (Object.keys(listcol[1]).length > 0) {                        
+          currentcolumnwidth = listcol[1].width;         
+          var colid = listcol[1].columnid;
+       }                    
+       if (Object.keys(listcol[0]).length > 0) { 
+          var nextcol = listcol[0];
+       }  
 
-      if (currentcolumnwidth > 0) {
-        Object.keys(listcol).forEach(function(key) {
-          console.log('booaommm')
-          
+      if (currentcolumnwidth > 0 && Object.keys(listcol[0]).length == 0) {
+        Object.keys(listcol).forEach(function(key) { 
+        console.log('boom2')  
 
+        for (i=0; i < listcol.length ; i++) {
+          if (Object.keys(listcol[i]).length > 0) {
+            var colid = listcol[i].columnid;
+            var idnumber = colid.match(numberPattern);
+            
+            var nextcolumn = idnumber.map(function(val){return ++val;});
 
-          
-          // $(listcol[key].currentcolumnid).animate({
-          $('#col1').animate({            
-              width: 0
-          }, 500)
+            var incrementedid;
+            var result = nextcolumn.filter(function( obj ) {
+              incrementedid = obj;  
+            });
 
+            var originalcol = prefix + idnumber;
+            var nextcol = prefix + incrementedid;                      
+            var panelid = prefixpanel + idnumber;
+            
+            console.log(panelid)
 
-          $('#col2').animate({
-              width: listcol[key].oldwidtcol + listcol[key].currentcolumnwidth   //-listcol[key].columnwidth
-          }, 500)
-        });        
-      } 
-      if (currentcolumnwidth <= 0) {
-        console.log('boom1')
-        // $(listcol[key].columnid).animate({
-        //       width: listcol[key].column.oldwidtcol - listcol[key].column.newwidthcol     //-listcol[key].columnwidth
-        //   }, 500)
-      
+            $(originalcol).animate({            
+                width: 0
+            }, 500)
+            document.getElementById(panelid).classList.add('minimzepanel');
+            
+
+            $(nextcol).animate({
+                width: 307 + currentcolumnwidth//listcol[0].oldwidtcol + listcol[0].currentcolumnwidth   //-listcol[key].columnwidth
+            }, 500) 
+           }
+          }
+        });
       }
-      if (currentcolumnwidth === 0) {
 
-      }
+      if (currentcolumnwidth == 0) {
+        console.log('boom3')     
+        Object.keys(listcol).forEach(function(key) { 
+          for (i=0; i < listcol.length ; i++) {
+            if (currentcolumnwidth <= 0) { 
+              $(originalcol).animate({            
+                  width: MINPANELWIDTH
+              }, 500)
+
+              $(nextcol).animate({
+                  width: currentcolumnwidth - MINPANELWIDTH//listcol[0].oldwidtcol + listcol[0].currentcolumnwidth   //-listcol[key].columnwidth
+              }, 500) 
+            }
+          }
+        });
+      }     
     }
 
     //need to test accurate
@@ -89,7 +118,7 @@
       var unusedwidth = 0;
       var gapcolumn = false;  
       Object.keys(objlist).forEach(function(key) {
-        var width = objlist[key].column.newwidthcol;         
+        var width = objlist[key].newwidthcol;         
         if (sum < MINPANELWIDTH) {    
           sum += width; 
           objlist[key].gapcolumn = false;         
@@ -106,15 +135,16 @@
     }
     //get list of objects where columns over 307 width
     function listofreducecolumns(nextcolumn, column) { 
+    var object = {};      
       if (nextcolumn.clientWidth > MINPANELWIDTH && nextcolumn.clientWidth != MINPANELWIDTH) {
         object[increcemntid++] = {  
-         column : {
+        //  column : {
             newwidthcol : newwidthcol = Math.abs(MINPANELWIDTH - nextcolumn.clientWidth),
             oldwidtcol : nextcolumn.clientWidth,
             columnid : nextcolumn.id,   
-         },    
-            currentcolumnid : column.id,
-            currentcolumnwidth : column.clientWidth          
+        //  },    
+            // currentcolumnid : column.id,
+            // currentcolumnwidth : column.clientWidth          
         }        
       }      
       return object;
@@ -122,8 +152,11 @@
     //collect all columns except splitters
     function resizecolumn(column, panelnode) { 
       increcemntid = 0;
-      var nextcolumn = column.nextElementSibling;      
-      var collectwidthlist = {};
+      
+      var nextcolumn = column.nextElementSibling;   
+      var currentcolumn = {};   
+      var list = {};
+      
       while (nextcolumn) {         
         if (nextcolumn.classList.contains('col')) {  
             newlistobj = listofreducecolumns(nextcolumn, column);         
@@ -133,8 +166,10 @@
           break; 
         }            
       } 
-      collectwidthlist = recalculatecolumns(newlistobj);  
-      return collectwidthlist;
+      list = recalculatecolumns(newlistobj);   
+      currentcolumn = { columnid : column.id,
+                        width : column.clientWidth } 
+      return [list, currentcolumn];
     }
   
    function hidepanel(panelnode) {  
@@ -145,20 +180,6 @@
     var listcol = resizecolumn(parent, panelnode);
 
     animatecolumns(listcol);
-
-    //   if (parent.offsetWidth > 0) {   
-    //     document.getElementById(panelnode.id).classList.add('minimzepanel');   
-    //   $(parent).animate({
-    //     width: 0
-    //     }, 500);
-    //   }    
-    // if (parent.clientWidth === 0 ) {
-
-    //   document.getElementById(panelnode.id).classList.remove('minimzepanel'); 
-    //   $(parent).animate({
-    //     width: newwidthcol
-    //     }, 500);
-    // }
   };
   
   function handledrag_new(deltax, leftpanelindex, leftpanel, rightpanel) {
