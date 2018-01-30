@@ -38,6 +38,8 @@
     var newlistobj = {};
     var increcemntid = 0;
 
+   
+
     //animate columns
     function animatecolumns(listcol) {   
 
@@ -77,8 +79,6 @@
             var nextcol = prefix + incrementedid;                      
             var panelid = prefixpanel + idnumber;
             
-            console.log(panelid)
-
             $(originalcol).animate({            
                 width: 0
             }, 500)
@@ -134,8 +134,9 @@
       return objlist;
     }
     //get list of objects where columns over 307 width
-    function listofreducecolumns(nextcolumn, column) { 
-    var object = {};      
+    function listofreducecolumns(nextcolumn, columns) { 
+      var object = {}; 
+      
       if (nextcolumn.clientWidth > MINPANELWIDTH && nextcolumn.clientWidth != MINPANELWIDTH) {
         object[increcemntid++] = {  
         //  column : {
@@ -149,24 +150,126 @@
       }      
       return object;
     }
-    //collect all columns except splitters
-    function resizecolumn(column, panelnode) { 
-      increcemntid = 0;
+
+    function checkgapwidth(columnwidth) {
+      if (columnwidth > MINPANELWIDTH && columnwidth != MINPANELWIDTH) {
+        columnwidth = Math.abs(MINPANELWIDTH - columnwidth)
+      }    
+      else {
+        columnwidth = columnwidth - MINPANELWIDTH
+      }      
+      return columnwidth;      
+    }
+
+   
+
+    function getallcolumns(columns) {
+      var list = [];
+
+      for (var column of columns) { 
+        column = {
+          columnwidth : column.clientWidth,
+          columnid: column.id,
+          gapwidth : gapwidth = checkgapwidth(column.clientWidth),         
+          gapflag : column.clientWidth > MINPANELWIDTH ? "true" : "false"        
+        }
+        list.push(column)
+      } 
+      return list;
+    }
+ 
+ 
+
+  function recalculate(objlist, column) {   
+    var sum = 0;
+
+    var listofgaps = objlist.filter(obj => obj.gapflag === "true");
+    
+    var sum = function(array) {
+      return (array.length === 0) ? 0 : array[0].gapwidth + sum(array.slice(1));
+    }
+
+    // var totalgap = sum(listofgaps); 
+    // var arraylength = listofgaps.length;
+
+    // var test = listofgaps.some(function(el) {
+    //   console.log(el);
+    //   return el === 2;
+    // });
       
+    function closest (num, arr) {
+        var curr = arr[0];
+        var diff = Math.abs (num - curr);
+        for (var val = 0; val < arr.length; val++) {
+            var newdiff = Math.abs (num - arr[val]);
+            if (newdiff < diff) {
+                diff = newdiff;
+                curr = arr[val];
+            }
+        }
+        return curr;
+    }
+    array = [2, 42, 82, 122, 162, 202, 242, 282, 322, 362];
+    number = 112;
+    
+    alert (closest (number, array));
+
+    Object.keys(listofgaps).forEach(function(key) {      
+   
+      var width = listofgaps[key].gapwidth;
+      var id = listofgaps[key].columnid;
+      var currentcol = column;
+
+      console.log(currentcol.id);
+      
+      var nearelement = 
+
+
+   
+
+
+      if (sum != MINPANELWIDTH) {    
+        sum += width;            
+      }       
+      if (sum > MINPANELWIDTH) {     
+        listofgaps[key].unused = Math.abs(sum - MINPANELWIDTH);     
+      } 
+      if (sum === MINPANELWIDTH) {
+        return listofgaps;                  
+      }
+    });        
+    return [listofgaps, column];
+  }
+
+    //collect all columns except splitters
+    function resizecolumn(column, columns) {      
+      increcemntid = 0;      
       var nextcolumn = column.nextElementSibling;   
       var currentcolumn = {};   
-      var list = {};
-      
+      var list = {};     
+
+
+      var allcolumnsgap = getallcolumns(columns);
+      var allgapes = recalculate(allcolumnsgap, column);
+
+
+
+
+
       while (nextcolumn) {         
         if (nextcolumn.classList.contains('col')) {  
-            newlistobj = listofreducecolumns(nextcolumn, column);         
+
+            newlistobj = listofreducecolumns(nextcolumn, columns);         
         }      
         nextcolumn = nextcolumn.nextElementSibling;            
         if (nextcolumn == null ) { 
           break; 
         }            
       } 
+
       list = recalculatecolumns(newlistobj);   
+
+
       currentcolumn = { columnid : column.id,
                         width : column.clientWidth } 
       return [list, currentcolumn];
@@ -175,9 +278,12 @@
    function hidepanel(panelnode) {  
 
     var parent = document.getElementById(panelnode.id).parentElement;
-    var columns = container.querySelectorAll(".col" ); 
+    // var columns = container.querySelectorAll(".col" ); 
 
-    var listcol = resizecolumn(parent, panelnode);
+    var array = Array.apply(null, container.querySelectorAll(".col" ));
+ 
+
+    var listcol = resizecolumn(parent, array);
 
     animatecolumns(listcol);
   };
