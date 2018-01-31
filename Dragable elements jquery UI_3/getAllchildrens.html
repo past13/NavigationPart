@@ -61,7 +61,6 @@
 
       if (currentcolumnwidth > 0 && Object.keys(listcol[0]).length == 0) {
         Object.keys(listcol).forEach(function(key) { 
-        console.log('boom2')  
 
         for (i=0; i < listcol.length ; i++) {
           if (Object.keys(listcol[i]).length > 0) {
@@ -94,7 +93,6 @@
       }
 
       if (currentcolumnwidth == 0) {
-        console.log('boom3')     
         Object.keys(listcol).forEach(function(key) { 
           for (i=0; i < listcol.length ; i++) {
             if (currentcolumnwidth <= 0) { 
@@ -159,35 +157,72 @@
         columnwidth = columnwidth - MINPANELWIDTH
       }      
       return columnwidth;      
-    }
-
-   
+    } 
 
     function getallcolumns(columns) {
       var list = [];
-
+      var index = 0;
       for (var column of columns) { 
         column = {
           columnwidth : column.clientWidth,
-          columnid: column.id,
+          columnid: Number(column.id.replace(/^\D+/g, '')),
           gapwidth : gapwidth = checkgapwidth(column.clientWidth),         
           gapflag : column.clientWidth > MINPANELWIDTH ? "true" : "false"        
         }
         list.push(column)
       } 
       return list;
+    } 
+
+  function getNearestNumber(ar, num) {
+    var i = 0, closest, closestDiff, currentDiff;
+    if (ar.length) {
+        closest = ar[0].columnid;        
+        for (i;i<ar.length;i++) {
+            closestDiff = Math.abs(num - closest);
+            currentDiff = Math.abs(num - ar[i].columnid);
+            if (currentDiff < closestDiff) {
+                closest = ar[i].columnid;   
+            }
+            closestDiff = null;
+            currentDiff = null;
+        }  
+        return closest;
     }
- 
- 
+    return false;
+  }  
 
-  function recalculate(objlist, column) {   
-    var sum = 0;
+  function recalculate(objlist, column) { 
+    var list = {};
+    var columnid = column.id;
+    var currentid = Number(columnid.replace(/^\D+/g, ''));     
+    var listofgaps = objlist.filter(obj => obj.gapflag === "true");    
 
-    var listofgaps = objlist.filter(obj => obj.gapflag === "true");
+    var nearestcol = getNearestNumber(listofgaps, currentid);  
+
+    var topcol = listofgaps.filter(obj => obj.columnid === nearestcol);
+    var newarray = listofgaps.unshift(topcol);
+
     
-    var sum = function(array) {
-      return (array.length === 0) ? 0 : array[0].gapwidth + sum(array.slice(1));
-    }
+    console.log(topcol)
+
+
+    // Array.prototype.move = function (old_index, new_index) {      
+    //   if (new_index >= this.length) {
+    //       var k = new_index - this.length;
+    //       while ((k--) + 1) {
+    //           this.push(undefined);
+    //       }
+    //   }
+    //   this.splice(new_index, 0, this.splice(old_index, 1)[0]);
+    //   return this;
+    // };
+
+    // var test = listofgaps.move(1, 0);
+  
+ 
+   
+
 
     // var totalgap = sum(listofgaps); 
     // var arraylength = listofgaps.length;
@@ -197,35 +232,34 @@
     //   return el === 2;
     // });
       
-    function closest (num, arr) {
-        var curr = arr[0];
-        var diff = Math.abs (num - curr);
-        for (var val = 0; val < arr.length; val++) {
-            var newdiff = Math.abs (num - arr[val]);
-            if (newdiff < diff) {
-                diff = newdiff;
-                curr = arr[val];
-            }
-        }
-        return curr;
-    }
-    array = [2, 42, 82, 122, 162, 202, 242, 282, 322, 362];
-    number = 112;
-    
-    alert (closest (number, array));
+    // function closest (num, array) {
+    //     var curr = array[0];
+        
+    //     var diff = Math.abs (num - curr);
 
+    //     console.log(diff)
+    //     console.log(curr)
+
+
+    //     for (var val = 0; val < array.length; val++) {
+    //         var newdiff = Math.abs (num - array[val]);
+    //         if (newdiff < diff) {
+    //             diff = newdiff;
+    //             curr = array[val];
+    //         }
+    //     }
+    //     return curr;
+    // }
+    var sum = function(array) {
+      return (array.length === 0) ? 0 : array[0].gapwidth + sum(array.slice(1));
+    }
+    
     Object.keys(listofgaps).forEach(function(key) {      
    
       var width = listofgaps[key].gapwidth;
       var id = listofgaps[key].columnid;
       var currentcol = column;
 
-      console.log(currentcol.id);
-      
-      var nearelement = 
-
-
-   
 
 
       if (sum != MINPANELWIDTH) {    
@@ -246,15 +280,10 @@
       increcemntid = 0;      
       var nextcolumn = column.nextElementSibling;   
       var currentcolumn = {};   
-      var list = {};     
-
+      var list = {};    
 
       var allcolumnsgap = getallcolumns(columns);
       var allgapes = recalculate(allcolumnsgap, column);
-
-
-
-
 
       while (nextcolumn) {         
         if (nextcolumn.classList.contains('col')) {  
@@ -267,24 +296,17 @@
         }            
       } 
 
-      list = recalculatecolumns(newlistobj);   
-
+      list = recalculatecolumns(newlistobj); 
 
       currentcolumn = { columnid : column.id,
                         width : column.clientWidth } 
       return [list, currentcolumn];
     }
   
-   function hidepanel(panelnode) {  
-
-    var parent = document.getElementById(panelnode.id).parentElement;
-    // var columns = container.querySelectorAll(".col" ); 
-
+   function hidepanel(panelnode) { 
+    var parent = document.getElementById(panelnode.id).parentElement; 
     var array = Array.apply(null, container.querySelectorAll(".col" ));
- 
-
     var listcol = resizecolumn(parent, array);
-
     animatecolumns(listcol);
   };
   
