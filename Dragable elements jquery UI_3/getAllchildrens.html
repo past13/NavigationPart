@@ -35,18 +35,17 @@
     currmousex = -1;
     MINPANELWIDTH = 307;    
       
-    var newlistobj = {};
-    var increcemntid = 0;
 
-   
-
-    //animate columns
-    function animatecolumns(listcol) {   
-
-      console.log('boom')         
+       //animate columns
+    function animateCol(listcol, rawcollist) {   
       var numberPattern = /\d+/g;
       var prefix = '#col';
       var prefixpanel = 'panel';
+
+
+      var collist = listcol[0];
+      var currentcolnode = listcol[1];
+      var originalcollist = rawcollist;  
 
       var currentcolumnwidth = 0;  
       var length = listcol[1].length;
@@ -92,64 +91,26 @@
         });
       }
 
-      if (currentcolumnwidth == 0) {
-        Object.keys(listcol).forEach(function(key) { 
-          for (i=0; i < listcol.length ; i++) {
-            if (currentcolumnwidth <= 0) { 
-              $(originalcol).animate({            
-                  width: MINPANELWIDTH
-              }, 500)
+      // if (currentcolumnwidth == 0) {
+      //   Object.keys(listcol).forEach(function(key) { 
+      //     for (i=0; i < listcol.length ; i++) {
+      //       if (currentcolumnwidth <= 0) { 
+      //         $(originalcol).animate({            
+      //             width: MINPANELWIDTH
+      //         }, 500)
 
-              $(nextcol).animate({
-                  width: currentcolumnwidth - MINPANELWIDTH//listcol[0].oldwidtcol + listcol[0].currentcolumnwidth   //-listcol[key].columnwidth
-              }, 500) 
-            }
-          }
-        });
-      }     
+      //         $(nextcol).animate({
+      //             width: currentcolumnwidth - MINPANELWIDTH//listcol[0].oldwidtcol + listcol[0].currentcolumnwidth   //-listcol[key].columnwidth
+      //         }, 500) 
+      //       }
+      //     }
+      //   });
+      // }     
     }
 
-    //need to test accurate
-    function recalculatecolumns(objlist) {
-      var sum = 0;
-      var id;
-      var unusedwidth = 0;
-      var gapcolumn = false;  
-      Object.keys(objlist).forEach(function(key) {
-        var width = objlist[key].newwidthcol;         
-        if (sum < MINPANELWIDTH) {    
-          sum += width; 
-          objlist[key].gapcolumn = false;         
-        }       
-        if (sum > MINPANELWIDTH) {     
-          objlist[key].unused = Math.abs(sum - MINPANELWIDTH);  
-          objlist[key].gapcolumn = true;
-        } 
-        if (sum === MINPANELWIDTH) {
-          return objlist;                  
-        }
-      });        
-      return objlist;
-    }
-    //get list of objects where columns over 307 width
-    function listofreducecolumns(nextcolumn, columns) { 
-      var object = {}; 
-      
-      if (nextcolumn.clientWidth > MINPANELWIDTH && nextcolumn.clientWidth != MINPANELWIDTH) {
-        object[increcemntid++] = {  
-        //  column : {
-            newwidthcol : newwidthcol = Math.abs(MINPANELWIDTH - nextcolumn.clientWidth),
-            oldwidtcol : nextcolumn.clientWidth,
-            columnid : nextcolumn.id,   
-        //  },    
-            // currentcolumnid : column.id,
-            // currentcolumnwidth : column.clientWidth          
-        }        
-      }      
-      return object;
-    }
+   
 
-    function checkgapwidth(columnwidth) {
+    function calculateColWidth(columnwidth) {
       if (columnwidth > MINPANELWIDTH && columnwidth != MINPANELWIDTH) {
         columnwidth = Math.abs(MINPANELWIDTH - columnwidth)
       }    
@@ -159,30 +120,47 @@
       return columnwidth;      
     } 
 
-    function getallcolumns(columns) {
+    function checkGapedCol(columnwidth) {
+      var gap = 0;
+      switch (true) {
+      case columnwidth > MINPANELWIDTH:
+        gap = 1;
+        break;
+      case columnwidth < MINPANELWIDTH:         
+        gap = -1;
+        break;    
+      case columnwidth == MINPANELWIDTH: 
+        gap = 0;
+        break;
+      }  
+      return gap;    
+    }
+
+    function getAllColumns(columns) {
       var list = [];
       var index = 0;
       for (var column of columns) { 
         column = {
           columnwidth : column.clientWidth,
           columnid: Number(column.id.replace(/^\D+/g, '')),
-          gapwidth : gapwidth = checkgapwidth(column.clientWidth),         
-          gapflag : column.clientWidth > MINPANELWIDTH ? "true" : "false"        
+          gapwidth : gapwidth = calculateColWidth(column.clientWidth), 
+          // gapflag : column.clientWidth > MINPANELWIDTH ? "true" : "false"
+          gapflag : gapflag = checkGapedCol(column.clientWidth)          
         }
         list.push(column)
-      } 
+      }  
       return list;
     } 
 
-  function getNearestNumber(ar, num) {
+  function getNearestNumber(array, num) {
     var i = 0, closest, closestDiff, currentDiff;
-    if (ar.length) {
-        closest = ar[0].columnid;        
-        for (i;i<ar.length;i++) {
+    if (array.length) {
+        closest = array[0].columnid;        
+        for (i;i<array.length;i++) {
             closestDiff = Math.abs(num - closest);
-            currentDiff = Math.abs(num - ar[i].columnid);
+            currentDiff = Math.abs(num - array[i].columnid);
             if (currentDiff < closestDiff) {
-                closest = ar[i].columnid;   
+                closest = array[i].columnid;   
             }
             closestDiff = null;
             currentDiff = null;
@@ -191,123 +169,82 @@
     }
     return false;
   }  
-
-  function recalculate(objlist, column) { 
-    var list = {};
-    var columnid = column.id;
-    var currentid = Number(columnid.replace(/^\D+/g, ''));     
-    var listofgaps = objlist.filter(obj => obj.gapflag === "true");    
-
-    var nearestcol = getNearestNumber(listofgaps, currentid);  
-
-    var topcol = listofgaps.filter(obj => obj.columnid === nearestcol);
-    var newarray = listofgaps.unshift(topcol);
-
-    
-    console.log(topcol)
-
-
-    // Array.prototype.move = function (old_index, new_index) {      
-    //   if (new_index >= this.length) {
-    //       var k = new_index - this.length;
-    //       while ((k--) + 1) {
-    //           this.push(undefined);
-    //       }
-    //   }
-    //   this.splice(new_index, 0, this.splice(old_index, 1)[0]);
-    //   return this;
-    // };
-
-    // var test = listofgaps.move(1, 0);
-  
- 
-   
-
-
-    // var totalgap = sum(listofgaps); 
-    // var arraylength = listofgaps.length;
-
-    // var test = listofgaps.some(function(el) {
-    //   console.log(el);
-    //   return el === 2;
-    // });
-      
-    // function closest (num, array) {
-    //     var curr = array[0];
-        
-    //     var diff = Math.abs (num - curr);
-
-    //     console.log(diff)
-    //     console.log(curr)
-
-
-    //     for (var val = 0; val < array.length; val++) {
-    //         var newdiff = Math.abs (num - array[val]);
-    //         if (newdiff < diff) {
-    //             diff = newdiff;
-    //             curr = array[val];
-    //         }
-    //     }
-    //     return curr;
-    // }
-    var sum = function(array) {
-      return (array.length === 0) ? 0 : array[0].gapwidth + sum(array.slice(1));
-    }
-    
-    Object.keys(listofgaps).forEach(function(key) {      
-   
-      var width = listofgaps[key].gapwidth;
-      var id = listofgaps[key].columnid;
-      var currentcol = column;
-
-
-
-      if (sum != MINPANELWIDTH) {    
-        sum += width;            
-      }       
-      if (sum > MINPANELWIDTH) {     
-        listofgaps[key].unused = Math.abs(sum - MINPANELWIDTH);     
-      } 
-      if (sum === MINPANELWIDTH) {
-        return listofgaps;                  
-      }
-    });        
-    return [listofgaps, column];
+  //todo fix
+  function cleanColumnId (currentcolumn) {
+    var id;
+    if (typeof currentcolumn === "number") {id = currentcolumn;} 
+    else {id = Number(currentcolumn.id.replace(/^\D+/g, ''));}
+    return id;
   }
 
-    //collect all columns except splitters
-    function resizecolumn(column, columns) {      
-      increcemntid = 0;      
-      var nextcolumn = column.nextElementSibling;   
-      var currentcolumn = {};   
-      var list = {};    
+  function preparingList(objlist, id, flag) { 
+    var list = {};
+    var currentid = id;
+    var listofcol = objlist.filter(o => o.gapflag === flag); 
+    var nearestcol = getNearestNumber(listofcol, currentid);   
+    listofcol.sort(function (a, b) {
+      var position = 0; 
+      if (a.columnid == nearestcol) {
+        position = position;
+      }
+      if (b.columnid == nearestcol) {
+        position = position + 1;
+      }      
+    return position;
+    });     
+    return listofcol;
+  }
 
-      var allcolumnsgap = getallcolumns(columns);
-      var allgapes = recalculate(allcolumnsgap, column);
+  function resizingCol(listofflags) {
+    
+    for (i = 0; i < listofflags.length; i++) {
 
-      while (nextcolumn) {         
-        if (nextcolumn.classList.contains('col')) {  
-
-            newlistobj = listofreducecolumns(nextcolumn, columns);         
-        }      
-        nextcolumn = nextcolumn.nextElementSibling;            
-        if (nextcolumn == null ) { 
-          break; 
-        }            
-      } 
-
-      list = recalculatecolumns(newlistobj); 
-
-      currentcolumn = { columnid : column.id,
-                        width : column.clientWidth } 
-      return [list, currentcolumn];
     }
+
+  }
+
+  function recalcColumns(allnodecolumns, currentcolumn) {    
+    var flag = 1; 
+    var collarray = getAllColumns(allnodecolumns);
+    var columnid = cleanColumnId(currentcolumn);
+    
+    var col = collarray.filter(obj => obj.columnid != columnid);  
+    var listofflags = collarray.filter(obj => obj.columnid != columnid && obj.gapflag === flag);  
+    var collist = preparingList(listofflags, columnid, flag); 
+    // var listcolgaps = preparingList(flag, collarray, currentcolumn); 
+  
+        
+    Object.keys(col).forEach(function(key) { 
+
+      
+      col[key].columnwidth = resizingCol(collist);
+
+    // console.log(col[key].gapflag)
+    // console.log(col[key].columnwidth)
+    // console.log(col[key].columnid)
+    
+    
+    });
+
+    // console.log(col)
+
+    
+   
+    // console.log(currentcol)
+    
+    
+
+    
+    
+  }  
   
    function hidepanel(panelnode) { 
-    var parent = document.getElementById(panelnode.id).parentElement; 
-    var array = Array.apply(null, container.querySelectorAll(".col" ));
-    var listcol = resizecolumn(parent, array);
-    animatecolumns(listcol);
+    var currentcolumn = document.getElementById(panelnode.id).parentElement; 
+    var allcolarray = Array.apply(null, container.querySelectorAll(".col" ));
+
+    var preparedlist = recalcColumns(allcolarray, currentcolumn);
+
+    // animateCol(collist, allcolarray);
   };
   
   function handledrag_new(deltax, leftpanelindex, leftpanel, rightpanel) {
@@ -385,6 +322,45 @@
   </body>
   </html>
   
+  <!-- var currentid = Number(columnid.replace(/^\D+/g, ''));  -->
   
   
   
+  <!-- // Array.prototype.move = function (old_index, new_index) {      
+    //   if (new_index >= this.length) {
+    //       var k = new_index - this.length;
+    //       while ((k--) + 1) {
+    //           this.push(undefined);
+    //       }
+    //   }
+    //   this.splice(new_index, 0, this.splice(old_index, 1)[0]);
+    //   return this;
+    // };
+
+    // var test = listofgaps.move(1, 0); -->
+
+
+<!-- 
+    
+    var sum = function(array) {
+      return (array.length === 0) ? 0 : array[0].gapwidth + sum(array.slice(1));
+    }
+    
+    Object.keys(listofgaps).forEach(function(key) {      
+   
+      var width = listofgaps[key].gapwidth;
+      var id = listofgaps[key].columnid;
+      var currentcol = column;
+
+
+
+      if (sum != MINPANELWIDTH) {    
+        sum += width;            
+      }       
+      if (sum > MINPANELWIDTH) {     
+        listofgaps[key].unused = Math.abs(sum - MINPANELWIDTH);     
+      } 
+      if (sum === MINPANELWIDTH) {
+        return listofgaps;                  
+      }
+    });         -->
