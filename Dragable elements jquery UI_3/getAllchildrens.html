@@ -34,85 +34,22 @@
     panels = [];
     currmousex = -1;
     MINPANELWIDTH = 307;    
-      
+    PREFIXCOL = '#col';  
+    PREFIXPANEL = 'panel';  
 
-       //animate columns
-    function animateCol(listcol, rawcollist) {   
-      var numberPattern = /\d+/g;
-      var prefix = '#col';
-      var prefixpanel = 'panel';
-
-
-      var collist = listcol[0];
-      var currentcolnode = listcol[1];
-      var originalcollist = rawcollist;  
-
-      var currentcolumnwidth = 0;  
-      var length = listcol[1].length;
-
-       if (Object.keys(listcol[1]).length > 0) {                        
-          currentcolumnwidth = listcol[1].width;         
-          var colid = listcol[1].columnid;
-       }                    
-       if (Object.keys(listcol[0]).length > 0) { 
-          var nextcol = listcol[0];
-       }  
-
-      if (currentcolumnwidth > 0 && Object.keys(listcol[0]).length == 0) {
-        Object.keys(listcol).forEach(function(key) { 
-
-        for (i=0; i < listcol.length ; i++) {
-          if (Object.keys(listcol[i]).length > 0) {
-            var colid = listcol[i].columnid;
-            var idnumber = colid.match(numberPattern);
-            
-            var nextcolumn = idnumber.map(function(val){return ++val;});
-
-            var incrementedid;
-            var result = nextcolumn.filter(function( obj ) {
-              incrementedid = obj;  
-            });
-
-            var originalcol = prefix + idnumber;
-            var nextcol = prefix + incrementedid;                      
-            var panelid = prefixpanel + idnumber;
-            
-            $(originalcol).animate({            
-                width: 0
-            }, 500)
-            document.getElementById(panelid).classList.add('minimzepanel');
-            
-
-            $(nextcol).animate({
-                width: 307 + currentcolumnwidth//listcol[0].oldwidtcol + listcol[0].currentcolumnwidth   //-listcol[key].columnwidth
-            }, 500) 
-           }
-          }
-        });
-      }
-
-      // if (currentcolumnwidth == 0) {
-      //   Object.keys(listcol).forEach(function(key) { 
-      //     for (i=0; i < listcol.length ; i++) {
-      //       if (currentcolumnwidth <= 0) { 
-      //         $(originalcol).animate({            
-      //             width: MINPANELWIDTH
-      //         }, 500)
-
-      //         $(nextcol).animate({
-      //             width: currentcolumnwidth - MINPANELWIDTH//listcol[0].oldwidtcol + listcol[0].currentcolumnwidth   //-listcol[key].columnwidth
-      //         }, 500) 
-      //       }
-      //     }
-      //   });
-      // }     
+    //animate columns
+    function animate(list) { 
+      Object.keys(list).forEach(function(key) { 
+        columnid = PREFIXCOL + list[key].columnid;
+        columnwidth = list[key].colwidth;
+        $(columnid).animate({            
+                width: columnwidth
+        }, 500)
+      });
     }
 
-   
-
     function calculateColWidth(columnwidth) {
-      if (columnwidth > MINPANELWIDTH && columnwidth != MINPANELWIDTH) {
-      
+      if (columnwidth > MINPANELWIDTH && columnwidth != MINPANELWIDTH) {      
         columnwidth = Math.abs(MINPANELWIDTH - columnwidth)
       }    
       else {
@@ -136,8 +73,8 @@
       }  
       return gap;    
     }
-
-    function getAllColumns(columns) {
+    //todo make general
+    function recalculateAllColumns(columns) {
       var list = [];
       var index = 0;
       for (var columnnode of columns) {
@@ -146,8 +83,7 @@
           columnid: Number(columnnode.id.replace(/^\D+/g, '')),
           colwidth : gapwidth = width,
           gapwidth : colwidth = calculateColWidth(width),
-          gapflag : gapflag = checkGapedCol(width)  
-          // gapflag : column.clientWidth > MINPANELWIDTH ? "true" : "false"
+          gapflag : gapflag = checkGapedCol(width)      
         }
         list.push(column)
       }
@@ -184,7 +120,6 @@
     var currentid = id;
     var listofcol = objlist.filter(o => o.gapflag === flag); 
     var nearestcol = getNearestNumber(listofcol, currentid);  
-    console.log(nearestcol)
      
     listofcol.sort(function (a, b) {
       var position = 0; 
@@ -199,56 +134,61 @@
     return listofcol;
   }
 
-  function resizingCol(listofflags) {
-    
-    // for (i = 0; i < listofflags.length; i++) {
-    // }
-
-  }
-
   function recalcColumns(allnodecolumns, currentcolumn) {    
-    var flag = -1; 
-    var collarray = getAllColumns(allnodecolumns);
-    var columnid = cleanColumnId(currentcolumn);
-    var col = collarray.filter(obj => obj.columnid != columnid);  
+    var flag = 1;   
+    var sum = 0;  
+    var currentcolwidth = currentcolumn.clientWidth;
+    var currentcolid = cleanColumnId(currentcolumn);
+    var rawcol = recalculateAllColumns(allnodecolumns);
+    var allcol = rawcol.filter(o => o.columnid != currentcolid); 
+    var currentcolobj = rawcol.filter(o => o.columnid == currentcolid);
+    var closestcolid = getNearestNumber(allcol, currentcolid);
+    var closestcolobj = allcol.filter(o => o.columnid == closestcolid);
     
-    var listofflags = collarray.filter(obj => obj.columnid != columnid && obj.gapflag === flag && obj.gapwidth != -307);  
-    
+    var currentcolpanel = currentcolumn.querySelector('h3');     
+    var collist = sortList(rawcol, currentcolid, flag); 
+    if (!currentcolpanel.classList.contains('minimzepanel')) {   
+      closestcolobj[0].colwidth += currentcolobj[0].colwidth;     
+      closestcolobj[0].gapwidth += currentcolobj[0].colwidth;      
+      currentcolobj[0].gapwidth = 0;//currentcolobj[0].gapwidth - currentcolobj[0].colwidth;
+      currentcolobj[0].gapflag = 0;      
+      currentcolobj[0].colwidth = 0; 
+    }
+    else {           
+      Object.keys(collist).forEach(function(key) { 
+      var panelid = PREFIXPANEL + currentcolid;        
+      //todo move to abstract methode
+      document.getElementById(panelid).classList.remove('minimzepanel');
+      if (currentcolobj[0].colwidth < MINPANELWIDTH) {          
+          sum += collist[key].gapwidth;
+          collist[key].colwidth = collist[key].colwidth - collist[key].gapwidth;          
+          collist[key].gapwidth = 0;
+          collist[key].gapflag = 0;
 
-    var near = getNearestNumber(col, columnid); 
-    console.log(near)
-  
-      
-    var collist = sortList(listofflags, columnid, flag); 
-
-
-    // var listcolgaps = preparingList(flag, collarray, currentcolumn); 
-  
-    Object.keys(col).forEach(function(key) { 
-
-      //atkomentuoti gal reikalingas bus efektina 151 eilute
-      // col[key].columnwidth = resizingCol(collist);
-    });
-
-    // console.log(col)
-
-    
-   
-    // console.log(currentcol)
-    
-    
-
-    
-    
-  }  
+          var dif = Math.abs(sum - MINPANELWIDTH);
+          currentcolobj[0].colwidth = MINPANELWIDTH;
+          currentcolobj[0].gapwidth = 0;
+          currentcolobj[0].gapflag = 0;
+          if (dif > 0) {
+            collist[key].gapwidth = dif;
+            collist[key].gapflag = 1;            
+          }
+          else {
+           currentcolobj[0].colwidth = MINPANELWIDTH;
+          }
+        }   
+      });           
+      var result = collist.concat(currentcolobj); 
+      return result;
+    }  
+  }
   
    function hidepanel(panelnode) { 
     var currentcolumn = document.getElementById(panelnode.id).parentElement; 
     var allcolarray = Array.apply(null, container.querySelectorAll(".col" ));
-
     var preparedlist = recalcColumns(allcolarray, currentcolumn);
 
-    // animateCol(collist, allcolarray);
+    animate(preparedlist);
   };
   
   function handledrag_new(deltax, leftpanelindex, leftpanel, rightpanel) {
@@ -288,6 +228,7 @@
     rightpanel.width(newwidthright);
   }
   
+  //todo make general
     $(document).ready(function() {
       panels = $( "#container" ).children().not( ".resizer" ); 
    
@@ -327,9 +268,6 @@
   </html>
   
   <!-- var currentid = Number(columnid.replace(/^\D+/g, ''));  -->
-  
-  
-  
   <!-- // Array.prototype.move = function (old_index, new_index) {      
     //   if (new_index >= this.length) {
     //       var k = new_index - this.length;
@@ -342,22 +280,14 @@
     // };
 
     // var test = listofgaps.move(1, 0); -->
-
-
-<!-- 
-    
+<!--    
     var sum = function(array) {
       return (array.length === 0) ? 0 : array[0].gapwidth + sum(array.slice(1));
-    }
-    
-    Object.keys(listofgaps).forEach(function(key) {      
-   
+    }    
+    Object.keys(listofgaps).forEach(function(key) {         
       var width = listofgaps[key].gapwidth;
       var id = listofgaps[key].columnid;
       var currentcol = column;
-
-
-
       if (sum != MINPANELWIDTH) {    
         sum += width;            
       }       
@@ -368,3 +298,60 @@
         return listofgaps;                  
       }
     });         -->
+
+    
+    <!-- //  if (Object.keys(listcol[1]).length > 0) {                        
+      //     currentcolumnwidth = listcol[1].width;         
+      //     var colid = listcol[1].columnid;
+
+   
+      //  }                    
+     
+
+      // if (currentcolumnwidth > 0 && Object.keys(listcol[0]).length == 0) {
+      //   Object.keys(listcol).forEach(function(key) { 
+
+      //   for (i=0; i < listcol.length ; i++) {
+      //     if (Object.keys(listcol[i]).length > 0) {
+      //       var colid = listcol[i].columnid;
+      //       var idnumber = colid.match(numberPattern);
+            
+      //       var nextcolumn = idnumber.map(function(val){return ++val;});
+
+      //       var incrementedid;
+      //       var result = nextcolumn.filter(function( obj ) {
+      //         incrementedid = obj;  
+      //       });
+
+      //       var originalcol = prefix + idnumber;
+      //       var nextcol = prefix + incrementedid;                      
+      //       var panelid = prefixpanel + idnumber;
+            
+      //       $(originalcol).animate({            
+      //           width: 0
+      //       }, 500)
+      //       document.getElementById(panelid).classList.add('minimzepanel');
+            
+
+      //       $(nextcol).animate({
+      //           width: 307 + currentcolumnwidth//listcol[0].oldwidtcol + listcol[0].currentcolumnwidth   //-listcol[key].columnwidth
+      //       }, 500) 
+      //      }
+      //     }
+      //   });
+
+      // if (currentcolumnwidth == 0) {
+      //   Object.keys(listcol).forEach(function(key) { 
+      //     for (i=0; i < listcol.length ; i++) {
+      //       if (currentcolumnwidth <= 0) { 
+      //         $(originalcol).animate({            
+      //             width: MINPANELWIDTH
+      //         }, 500)
+
+      //         $(nextcol).animate({
+      //             width: currentcolumnwidth - MINPANELWIDTH//listcol[0].oldwidtcol + listcol[0].currentcolumnwidth   //-listcol[key].columnwidth
+      //         }, 500) 
+      //       }
+      //     }
+      //   });
+      // }      -->
