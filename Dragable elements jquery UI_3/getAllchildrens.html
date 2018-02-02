@@ -112,6 +112,7 @@
 
     function calculateColWidth(columnwidth) {
       if (columnwidth > MINPANELWIDTH && columnwidth != MINPANELWIDTH) {
+      
         columnwidth = Math.abs(MINPANELWIDTH - columnwidth)
       }    
       else {
@@ -139,16 +140,17 @@
     function getAllColumns(columns) {
       var list = [];
       var index = 0;
-      for (var column of columns) { 
-        column = {
-          columnwidth : column.clientWidth,
-          columnid: Number(column.id.replace(/^\D+/g, '')),
-          gapwidth : gapwidth = calculateColWidth(column.clientWidth), 
+      for (var columnnode of columns) {
+      var width = columnnode.clientWidth;
+        var column = {
+          columnid: Number(columnnode.id.replace(/^\D+/g, '')),
+          colwidth : gapwidth = width,
+          gapwidth : colwidth = calculateColWidth(width),
+          gapflag : gapflag = checkGapedCol(width)  
           // gapflag : column.clientWidth > MINPANELWIDTH ? "true" : "false"
-          gapflag : gapflag = checkGapedCol(column.clientWidth)          
         }
         list.push(column)
-      }  
+      }
       return list;
     } 
 
@@ -177,11 +179,13 @@
     return id;
   }
 
-  function preparingList(objlist, id, flag) { 
+  function sortList(objlist, id, flag) { 
     var list = {};
     var currentid = id;
     var listofcol = objlist.filter(o => o.gapflag === flag); 
-    var nearestcol = getNearestNumber(listofcol, currentid);   
+    var nearestcol = getNearestNumber(listofcol, currentid);  
+    console.log(nearestcol)
+     
     listofcol.sort(function (a, b) {
       var position = 0; 
       if (a.columnid == nearestcol) {
@@ -197,33 +201,33 @@
 
   function resizingCol(listofflags) {
     
-    for (i = 0; i < listofflags.length; i++) {
-
-    }
+    // for (i = 0; i < listofflags.length; i++) {
+    // }
 
   }
 
   function recalcColumns(allnodecolumns, currentcolumn) {    
-    var flag = 1; 
+    var flag = -1; 
     var collarray = getAllColumns(allnodecolumns);
     var columnid = cleanColumnId(currentcolumn);
-    
     var col = collarray.filter(obj => obj.columnid != columnid);  
-    var listofflags = collarray.filter(obj => obj.columnid != columnid && obj.gapflag === flag);  
-    var collist = preparingList(listofflags, columnid, flag); 
+    
+    var listofflags = collarray.filter(obj => obj.columnid != columnid && obj.gapflag === flag && obj.gapwidth != -307);  
+    
+
+    var near = getNearestNumber(col, columnid); 
+    console.log(near)
+  
+      
+    var collist = sortList(listofflags, columnid, flag); 
+
+
     // var listcolgaps = preparingList(flag, collarray, currentcolumn); 
   
-        
     Object.keys(col).forEach(function(key) { 
 
-      
-      col[key].columnwidth = resizingCol(collist);
-
-    // console.log(col[key].gapflag)
-    // console.log(col[key].columnwidth)
-    // console.log(col[key].columnid)
-    
-    
+      //atkomentuoti gal reikalingas bus efektina 151 eilute
+      // col[key].columnwidth = resizingCol(collist);
     });
 
     // console.log(col)
