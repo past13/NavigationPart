@@ -98,6 +98,8 @@ function handledrag_new(deltax, leftpanelindex, leftpanel, rightpanel) {
 
   $(document).ready(function(){
     panels = $( "#container" ).children().not( ".resizer" ); 
+    draggedelement = $('#container');
+    console.log(draggedelement)
  
   $("#splitter1").on("mousedown", function(e){
     draggedpanel = 0;

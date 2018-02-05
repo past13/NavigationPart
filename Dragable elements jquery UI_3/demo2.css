@@ -6,11 +6,8 @@
     overflow: hidden;  
   }
 
-  h3 {
-    
-    /* padding: 5px; */
+  h3 {    
     margin: 10px;
-    /* border-style: solid; */
     font: 25px arial, sans-serif;
     color: #db1919;    
   }
@@ -33,23 +30,7 @@
     z-index: 9000;
     left: 25%;
   }
-  
-  /* .second {
-    width: 40px;
-    height: 100%;
-    float: left;
-    background-color: rgba(210, 231, 17, 0.938);
-    z-index: 9000;    
-  }
 
-  .third {
-    width: 40px;
-    height: 100%;
-    float: left;  
-    background-color: rgba(210, 231, 17, 0.938);  
-    z-index: 9000;
-  } */
-  
   .resizer:hover {
     cursor: col-resize;
   }  
@@ -68,7 +49,6 @@
   #col3 {
     background: none no-repeat 0 0 scroll #777;
     float: left;
-    /* left: calc(50% - 4px); */
     width: 307px;        
   }
 
@@ -96,8 +76,7 @@
     border: 1px solid #000;
 }
 .btn-minimize {
-  position: left;
-  
+    position: left;  
     width: 50px;
     height: 50px;
     background-color: #F00;

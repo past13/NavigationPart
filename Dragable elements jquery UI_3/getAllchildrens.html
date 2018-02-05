@@ -36,19 +36,10 @@
     MINPANELWIDTH = 307;    
     PREFIXCOL = '#col';  
     PREFIXPANEL = 'panel';  
+    PREFIXCROSS = '#';
+    CONTAINER = '#container';   
 
-    //animate columns
-    function animate(list) { 
-      Object.keys(list).forEach(function(key) { 
-        columnid = PREFIXCOL + list[key].columnid;
-        columnwidth = list[key].colwidth;
-        $(columnid).animate({            
-                width: columnwidth
-        }, 500)
-      });
-    }
-
-    function calculateColWidth(columnwidth) {
+    function calculateColWidth(columnwidth) {  
       if (columnwidth > MINPANELWIDTH && columnwidth != MINPANELWIDTH) {      
         columnwidth = Math.abs(MINPANELWIDTH - columnwidth)
       }    
@@ -58,16 +49,16 @@
       return columnwidth;      
     } 
 
-    function checkGapedCol(columnwidth) {
+    function checkGapedCol(columnwidth) {      
       var gap = 0;
       switch (true) {
-      case columnwidth > MINPANELWIDTH:
+      case columnwidth > MINPANELWIDTH:      
         gap = 1;
         break;
       case columnwidth < MINPANELWIDTH:         
         gap = -1;
         break;    
-      case columnwidth == MINPANELWIDTH: 
+      case columnwidth === MINPANELWIDTH: 
         gap = 0;
         break;
       }  
@@ -83,10 +74,9 @@
           columnid: Number(columnnode.id.replace(/^\D+/g, '')),
           colwidth : gapwidth = width,
           gapwidth : colwidth = calculateColWidth(width),
-          gapflag : gapflag = checkGapedCol(width)      
         }
         list.push(column)
-      }
+      }     
       return list;
     } 
 
@@ -107,21 +97,32 @@
     }
     return false;
   }  
-  //todo fix
+ 
   function cleanColumnId (currentcolumn) {
     var id;
     if (typeof currentcolumn === "number") {id = currentcolumn;} 
-    else {id = Number(currentcolumn.id.replace(/^\D+/g, ''));}
+    else {id = Number(currentcolumn.id.replace(/^\D+/g, ''));}    
     return id;
   }
 
-  function sortList(objlist, id, flag) { 
-    var list = {};
-    var currentid = id;
-    var listofcol = objlist.filter(o => o.gapflag === flag); 
-    var nearestcol = getNearestNumber(listofcol, currentid);  
+  function minimizeColumn(colwidth, currentpanelid) {
+    if (document.getElementById(currentpanelid).classList.contains('minimzepanel')) {   
      
-    listofcol.sort(function (a, b) {
+      console.log('remove')      
+      
+      document.getElementById(currentpanelid).classList.remove('minimzepanel');
+    }
+    else {   
+       console.log('add')
+      document.getElementById(currentpanelid).classList.add('minimzepanel');
+    }
+  
+  }
+
+  function sortList(objlist, id) {  
+    var currentid = id; 
+    var nearestcol = getNearestNumber(objlist, currentid);      
+     objlist.sort(function (a, b) {
       var position = 0; 
       if (a.columnid == nearestcol) {
         position = position;
@@ -131,64 +132,37 @@
       }      
     return position;
     });     
-    return listofcol;
+    return objlist;
   }
 
   function recalcColumns(allnodecolumns, currentcolumn) {    
     var flag = 1;   
-    var sum = 0;  
-    var currentcolwidth = currentcolumn.clientWidth;
-    var currentcolid = cleanColumnId(currentcolumn);
-    var rawcol = recalculateAllColumns(allnodecolumns);
+    var sum = 0;
+    var currentcolid = cleanColumnId(currentcolumn);  
+    var rawcol = recalculateAllColumns(allnodecolumns); 
     var allcol = rawcol.filter(o => o.columnid != currentcolid); 
-    var currentcolobj = rawcol.filter(o => o.columnid == currentcolid);
+    var currentcolobj = rawcol.filter(o => o.columnid == currentcolid);    
+    var currentcolpanel = currentcolumn.querySelector('h3'); 
     var closestcolid = getNearestNumber(allcol, currentcolid);
-    var closestcolobj = allcol.filter(o => o.columnid == closestcolid);
-    
-    var currentcolpanel = currentcolumn.querySelector('h3');     
-    var collist = sortList(rawcol, currentcolid, flag); 
-    if (!currentcolpanel.classList.contains('minimzepanel')) {   
-      closestcolobj[0].colwidth += currentcolobj[0].colwidth;     
-      closestcolobj[0].gapwidth += currentcolobj[0].colwidth;      
-      currentcolobj[0].gapwidth = 0;//currentcolobj[0].gapwidth - currentcolobj[0].colwidth;
-      currentcolobj[0].gapflag = 0;      
-      currentcolobj[0].colwidth = 0; 
-    }
-    else {           
-      Object.keys(collist).forEach(function(key) { 
-      var panelid = PREFIXPANEL + currentcolid;        
-      //todo move to abstract methode
-      document.getElementById(panelid).classList.remove('minimzepanel');
-      if (currentcolobj[0].colwidth < MINPANELWIDTH) {          
-          sum += collist[key].gapwidth;
-          collist[key].colwidth = collist[key].colwidth - collist[key].gapwidth;          
-          collist[key].gapwidth = 0;
-          collist[key].gapflag = 0;
-
-          var dif = Math.abs(sum - MINPANELWIDTH);
-          currentcolobj[0].colwidth = MINPANELWIDTH;
-          currentcolobj[0].gapwidth = 0;
-          currentcolobj[0].gapflag = 0;
-          if (dif > 0) {
-            collist[key].gapwidth = dif;
-            collist[key].gapflag = 1;            
-          }
-          else {
-           currentcolobj[0].colwidth = MINPANELWIDTH;
-          }
-        }   
-      });           
-      var result = collist.concat(currentcolobj); 
-      return result;
-    }  
+    var closestcolobj = allcol.filter(o => o.columnid == closestcolid); 
+    closestcolobj[0].colwidth += currentcolobj[0].colwidth;     
+    closestcolobj[0].gapwidth += currentcolobj[0].colwidth;      
+    currentcolobj[0].gapwidth = 0;
+    currentcolobj[0].gapflag = 0;      
+    currentcolobj[0].colwidth = 0;  
+    var result = closestcolobj.concat(currentcolobj);
+    Object.keys(result).forEach(function(key) { 
+      result[key].gapflag = checkGapedCol(result[key].colwidth); 
+    }); 
+    var sortedlist = sortList(result, currentcolid);   
+    return [sortedlist, currentcolpanel];
   }
-  
+
    function hidepanel(panelnode) { 
     var currentcolumn = document.getElementById(panelnode.id).parentElement; 
-    var allcolarray = Array.apply(null, container.querySelectorAll(".col" ));
-    var preparedlist = recalcColumns(allcolarray, currentcolumn);
-
-    animate(preparedlist);
+    var allcolarray = Array.apply(null, container.querySelectorAll(".col" )); 
+    var preparedlist = recalcColumns(allcolarray, currentcolumn);  
+    animate(preparedlist, currentcolumn);
   };
   
   function handledrag_new(deltax, leftpanelindex, leftpanel, rightpanel) {
@@ -210,48 +184,48 @@
         newwidthright = totalwidth;
       }
     }
-  //move to another method adding class 'minimize'
-    if (leftpanel.width() <= MINPANELWIDTH) {
-      document.getElementById(leftpanelid).classList.add('minimzepanel');
-    }
-    else {
-      document.getElementById(leftpanelid).classList.remove('minimzepanel');      
-    }
-  
-    if (rightpanel.width() <= MINPANELWIDTH) {
-      document.getElementById(rightpanelid).classList.add('minimzepanel');
-    }
-    else {
-      document.getElementById(rightpanelid).classList.remove('minimzepanel');  
-    }
+    minimizeColumn(leftpanel.width(), leftpanelid);
+    minimizeColumn(rightpanel.width(), rightpanelid);
     leftpanel.width(newwidthleft);
     rightpanel.width(newwidthright);
   }
   
-  //todo make general
+  //animate columns
+  function animate(list, currentcolumn) {
+
+    console.log(list)
+    console.log(currentcolumn)  
+      
+    Object.keys(list[0]).forEach(function(key) {  
+      columnidprefix = PREFIXCOL + list[0][key].columnid;
+      columnwidth = list[0][key].colwidth;
+      columnid = PREFIXPANEL + list[0][key].columnid;       
+      $(columnidprefix).animate({            
+        width: columnwidth,
+        style: minimizeColumn(columnwidth, columnid)
+      }, 500)     
+    });    
+  }
+
+  var splitters = [];
     $(document).ready(function() {
-      panels = $( "#container" ).children().not( ".resizer" ); 
-   
-    $("#splitter1").on("mousedown", function(e){
-      draggedpanel = 0;
-      return false;
-    });
+      panels = $(CONTAINER).children().not(".resizer");       
+      splitters = $(CONTAINER).children().not(".col").toArray();  
+      Object.keys(splitters).forEach(function(key) {        
+        var splitterid = PREFIXCROSS + splitters[key].id;
+        var currentsplitterid = splitters[key];        
+        var cleanid = cleanColumnId(currentsplitterid);
+        $(splitterid).on("mousedown", function(e){
+          draggedpanel = cleanid - 1;
+          return false;
+        });
+      });
   
-    $("#splitter2").on("mousedown", function(e){
-      draggedpanel = 1;
-      return false;
-    });
-  
-    $("#splitter3").on("mousedown", function(e){
-      draggedpanel = 2; 
-      return false;
-    });
-  
-    $("#container").on("mouseup", function(e){ 
+    $(CONTAINER).on("mouseup", function(e){ 
       draggedpanel = -1;
     });
       
-    $("#container").on("mousemove", function (e){    
+    $(CONTAINER).on("mousemove", function (e){    
       var mousex = e.pageX;
       if (draggedpanel != -1) {
         parentOffset = $(this).offset();
@@ -266,92 +240,4 @@
     </script> 
   </body>
   </html>
-  
-  <!-- var currentid = Number(columnid.replace(/^\D+/g, ''));  -->
-  <!-- // Array.prototype.move = function (old_index, new_index) {      
-    //   if (new_index >= this.length) {
-    //       var k = new_index - this.length;
-    //       while ((k--) + 1) {
-    //           this.push(undefined);
-    //       }
-    //   }
-    //   this.splice(new_index, 0, this.splice(old_index, 1)[0]);
-    //   return this;
-    // };
-
-    // var test = listofgaps.move(1, 0); -->
-<!--    
-    var sum = function(array) {
-      return (array.length === 0) ? 0 : array[0].gapwidth + sum(array.slice(1));
-    }    
-    Object.keys(listofgaps).forEach(function(key) {         
-      var width = listofgaps[key].gapwidth;
-      var id = listofgaps[key].columnid;
-      var currentcol = column;
-      if (sum != MINPANELWIDTH) {    
-        sum += width;            
-      }       
-      if (sum > MINPANELWIDTH) {     
-        listofgaps[key].unused = Math.abs(sum - MINPANELWIDTH);     
-      } 
-      if (sum === MINPANELWIDTH) {
-        return listofgaps;                  
-      }
-    });         -->
-
-    
-    <!-- //  if (Object.keys(listcol[1]).length > 0) {                        
-      //     currentcolumnwidth = listcol[1].width;         
-      //     var colid = listcol[1].columnid;
-
-   
-      //  }                    
-     
-
-      // if (currentcolumnwidth > 0 && Object.keys(listcol[0]).length == 0) {
-      //   Object.keys(listcol).forEach(function(key) { 
-
-      //   for (i=0; i < listcol.length ; i++) {
-      //     if (Object.keys(listcol[i]).length > 0) {
-      //       var colid = listcol[i].columnid;
-      //       var idnumber = colid.match(numberPattern);
-            
-      //       var nextcolumn = idnumber.map(function(val){return ++val;});
-
-      //       var incrementedid;
-      //       var result = nextcolumn.filter(function( obj ) {
-      //         incrementedid = obj;  
-      //       });
-
-      //       var originalcol = prefix + idnumber;
-      //       var nextcol = prefix + incrementedid;                      
-      //       var panelid = prefixpanel + idnumber;
-            
-      //       $(originalcol).animate({            
-      //           width: 0
-      //       }, 500)
-      //       document.getElementById(panelid).classList.add('minimzepanel');
-            
-
-      //       $(nextcol).animate({
-      //           width: 307 + currentcolumnwidth//listcol[0].oldwidtcol + listcol[0].currentcolumnwidth   //-listcol[key].columnwidth
-      //       }, 500) 
-      //      }
-      //     }
-      //   });
-
-      // if (currentcolumnwidth == 0) {
-      //   Object.keys(listcol).forEach(function(key) { 
-      //     for (i=0; i < listcol.length ; i++) {
-      //       if (currentcolumnwidth <= 0) { 
-      //         $(originalcol).animate({            
-      //             width: MINPANELWIDTH
-      //         }, 500)
-
-      //         $(nextcol).animate({
-      //             width: currentcolumnwidth - MINPANELWIDTH//listcol[0].oldwidtcol + listcol[0].currentcolumnwidth   //-listcol[key].columnwidth
-      //         }, 500) 
-      //       }
-      //     }
-      //   });
-      // }      -->
+ 
